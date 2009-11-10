@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FB8D10A5-40A2-44B0-A30F-1B316B5AFC34}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Gp.Web</RootNamespace>
+    <AssemblyName>Gp.Web</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\EnvDTE90.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Compress\CompressionModuleHelper.cs" />
+    <Compile Include="Configuration\CurrentConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\CurrentConfigurationManager.cs" />
+    <Compile Include="Configuration\NamedConfigurationElement.cs" />
+    <Compile Include="CssSprite\Config\CssSpriteGroupElement.cs" />
+    <Compile Include="CssSprite\Config\CssSpriteGroupElementCollection.cs" />
+    <Compile Include="CssSprite\Config\CssSpriteSection.cs" />
+    <Compile Include="CssSprite\Config\CurrentCssSpriteConfiguration.cs" />
+    <Compile Include="CssSprite\Config\ImageFileElement.cs" />
+    <Compile Include="CssSprite\Config\ImageFileElementCollection.cs" />
+    <Compile Include="CssSprite\CssSpriteHelper.cs" />
+    <Compile Include="CssSprite\CssSpriteManager.cs" />
+    <Compile Include="CssSprite\CssSpriteModule.cs" />
+    <Compile Include="CssSprite\ImageFile.cs" />
+    <Compile Include="CssSprite\SpriteElement.cs" />
+    <Compile Include="Helper\FileHelper.cs" />
+    <Compile Include="Helper\HashHelper.cs" />
+    <Compile Include="Helper\MimeHelper.cs" />
+    <Compile Include="Helper\UrlHelper.cs" />
+    <Compile Include="LogUrl\AfterLogUrlEventArgs.cs" />
+    <Compile Include="LogUrl\AfterLogUrlEventHandler.cs" />
+    <Compile Include="LogUrl\BeforeLogUrlEventArgs.cs" />
+    <Compile Include="LogUrl\BeforeLogUrlEventHandler.cs" />
+    <Compile Include="LogUrl\Config\CurrentLogUrlConfiguration.cs" />
+    <Compile Include="LogUrl\Config\LogUrlSection.cs" />
+    <Compile Include="LogUrl\LogUrlEventArgs.cs" />
+    <Compile Include="LogUrl\LogUrlEventHandler.cs" />
+    <Compile Include="LogUrl\LogUrlManager.cs" />
+    <Compile Include="Module\DictionaryExtensions.cs" />
+    <Compile Include="Module\HttpModuleBase.cs" />
+    <Compile Include="Module\HttpModuleRegistry.cs" />
+    <Compile Include="LogUrl\LogUrlModule.cs" />
+    <Compile Include="LogUrl\Config\UrlMatchElement.cs" />
+    <Compile Include="LogUrl\Config\UrlMatchElementCollection.cs" />
+    <Compile Include="Compress\Decryptor.cs" />
+    <Compile Include="Compress\EmptyMembershipProvider.cs" />
+    <Compile Include="Compress\Quadruplet.cs" />
+    <Compile Include="Compress\SR.cs" />
+    <Compile Include="Compress\WebResourceCompressionModule.cs" />
+    <Compile Include="Crusher\Config\CssFileElement.cs" />
+    <Compile Include="Crusher\Config\CssFileElementCollection.cs" />
+    <Compile Include="Crusher\Config\CssGroupElement.cs" />
+    <Compile Include="Crusher\Config\CssGroupElementCollection.cs" />
+    <Compile Include="Crusher\Config\CurrentCrusherConfiguration.cs" />
+    <Compile Include="Crusher\Config\JsFileElement.cs" />
+    <Compile Include="Crusher\Config\JsFileElementCollection.cs" />
+    <Compile Include="Crusher\Config\JsGroupElement.cs" />
+    <Compile Include="Crusher\Config\JsGroupElementCollection.cs" />
+    <Compile Include="Crusher\Config\CrusherSection.cs" />
+    <Compile Include="Crusher\CrushCssHelper.cs" />
+    <Compile Include="Crusher\CrushJsHelper.cs" />
+    <Compile Include="Crusher\CssCompressionType.cs" />
+    <Compile Include="Crusher\CssControl.cs" />
+    <Compile Include="Crusher\CssFile.cs" />
+    <Compile Include="Crusher\JsCompressionType.cs" />
+    <Compile Include="Crusher\JsControl.cs" />
+    <Compile Include="Crusher\JsFile.cs" />
+    <Compile Include="Crusher\CrusherManager.cs" />
+    <Compile Include="Crusher\CrusherModule.cs" />
+    <Compile Include="StaticFile\Config\CurrentStaticFileHandlerConfiguration.cs" />
+    <Compile Include="StaticFile\Config\FileExtensionDefaultElement.cs" />
+    <Compile Include="StaticFile\Config\FileExtensionElementCollection.cs" />
+    <Compile Include="StaticFile\Config\StaticFileHandlerSection.cs" />
+    <Compile Include="StaticFile\Config\FileExtensionElement.cs" />
+    <Compile Include="StaticFile\EtagMethodType.cs" />
+    <Compile Include="StaticFile\FileExtensionMatch.cs" />
+    <Compile Include="StaticFile\FileHandlerCacheItem.cs" />
+    <Compile Include="Compress\PageCompressionModule.cs" />
+    <Compile Include="StaticFile\StaticFileHelper.cs" />
+    <Compile Include="StaticFile\StaticFileAsyncHandler.cs" />
+    <Compile Include="StaticFile\StaticFileHandler.cs" />
+    <Compile Include="StaticFile\HttpContextProcessorDelegate.cs" />
+    <Compile Include="StaticFile\RangeItem.cs" />
+    <Compile Include="StaticFile\ResponseCompressionType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EcmaScript.NET\EcmaScript.NET.csproj">
+      <Project>{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}</Project>
+      <Name>EcmaScript.NET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Yahoo.Yui.Compressor\Yahoo.Yui.Compressor.csproj">
+      <Project>{7A85988C-2836-4BD6-9143-17C606B218D9}</Project>
+      <Name>Yahoo.Yui.Compressor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

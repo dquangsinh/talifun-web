@@ -1,0 +1,78 @@
+﻿/* Backgrounds & colours
+================================== */
+
+body.worm .main-wrapper-inner {
+	background: url(../images/css-images/background-main-wrapper-inner-worm.jpg) no-repeat 0 0;
+	}
+	
+body.worm .main-wrapper {
+	background: #000000 url(../images/css-images/background-main-wrapper-worm.jpg) repeat-x 0 585px;
+	}
+	
+body.worm .mask-top {
+	background: url(../images/css-images/mask-intro-top-worm.png) no-repeat;
+	}
+	
+body.worm .mask-bottom {
+	background: url(../images/css-images/mask-intro-bottom-worm.png) no-repeat left bottom;
+	}
+	
+body.worm .title-wrapper h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-worm.png) no-repeat;
+	}
+	
+body.worm .order-free h3 {
+	background: url(../images/css-images/background-order-free-h3-worm.png) no-repeat;
+	}
+
+body.worm .local-nav h3 {
+	background: url(../images/css-images/background-local-nav-h3-worm.png) no-repeat;
+	}
+	
+.age-range-1 .featurebox-inner,
+body.worm .order-free .featurebox-inner,
+body.worm .local-nav .featurebox-inner {
+	background: url(../images/css-images/background-featurebox-worm.png) left bottom no-repeat;
+	}
+	
+.age-range-1 a,
+body.worm .order-free a,
+body.worm .local-nav a  { 
+	color: #164C0E;
+	}
+	
+body.worm .order-free .kit a {
+	background: url(../images/css-images/wormkit.png) no-repeat;
+	}
+	
+body.worm .main-content-wrapper a,
+body.worm .media-panel-inner a,
+body.worm .main-content-wrapper h3,
+body.worm .main-content-wrapper h4 { 
+	color: #87DF02;
+	}
+	
+body.worm .media-panel .controls ul li.current,
+body.worm .media-panel .controls ul li:hover {
+	background: url(../images/css-images/background-media-panel-controls-selected-worm.jpg) top left repeat-x;
+	}
+	
+body.worm .local-nav li.home span.current,
+body.worm .local-nav li.home:hover span {
+	background: url(../images/css-images/icon-home.gif) no-repeat 0 -56px;
+	}
+	
+body.worm .local-nav li.video span.current,
+body.worm .local-nav li.video:hover span {
+	background: url(../images/css-images/icon-video.gif) no-repeat 0 -56px;
+	}
+	
+body.worm .local-nav li.animation span.current,
+body.worm .local-nav li.animation:hover span {
+	background: url(../images/css-images/icon-animation.gif) no-repeat 0 -56px;
+	}
+	
+body.worm .local-nav li.resources span.current,
+body.worm .local-nav li.resources:hover span {
+	background: url(../images/css-images/icon-resources.gif) no-repeat 0 -56px;
+	}

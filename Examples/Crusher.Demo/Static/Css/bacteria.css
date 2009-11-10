@@ -1,0 +1,99 @@
+﻿/* Backgrounds & colours hello all  
+================================== */
+
+body.bacteria .main-wrapper-inner {
+	background: url(../images/css-images/background-main-wrapper-inner-bacteria.jpg) no-repeat 0 0;
+	}
+	
+body.bacteria .main-wrapper {
+	background: #000000 url(../images/css-images/background-main-wrapper-bacteria.jpg) repeat-x 0 585px;
+	}
+	
+body.bacteria .mask-top {
+	background: url(../images/css-images/mask-intro-top-bacteria.png) no-repeat;
+	}
+	
+body.bacteria .mask-bottom {
+	background: url(../images/css-images/mask-intro-bottom-bacteria.png) no-repeat left bottom;
+	}
+	
+body.bacteria .title-wrapper h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-bacteria.png) no-repeat;
+	}
+	
+body.bacteria .order-free h3 {
+	background: url(../images/css-images/background-order-free-h3-bacteria.png) no-repeat;
+	}
+
+body.bacteria .local-nav h3 {
+	background: url(../images/css-images/background-local-nav-h3-bacteria.png) no-repeat;
+	}
+	
+.age-range-3 .featurebox-inner,
+body.bacteria .order-free .featurebox-inner,
+body.bacteria .local-nav .featurebox-inner {
+	background: url(../images/css-images/background-featurebox-bacteria.png) left bottom no-repeat;
+	}
+	
+.age-range-3 a,
+body.bacteria .order-free a,
+body.bacteria .local-nav a { 
+	color: #DC4727;
+	}
+	
+body.bacteria .order-free .kit a {
+	background: url(../images/css-images/bacteriakit.png) no-repeat;
+	}
+	
+body.bacteria .main-content-wrapper a,
+body.bacteria .media-panel-inner a,
+body.bacteria .main-content-wrapper h3,
+body.bacteria .main-content-wrapper h4 { 
+	color: #F55A10;
+	}
+	
+body.bacteria .media-panel .controls ul li.current,
+body.bacteria .media-panel .controls ul li:hover {
+	background: url(../images/css-images/background-media-panel-controls-selected-bacteria.jpg) top left repeat-x;
+	}
+	
+body.bacteria .local-nav li.home span.current,
+body.bacteria .local-nav li.home:hover span {
+	background: url(../images/css-images/icon-home.gif) no-repeat 0 -169px;
+	}
+	
+body.bacteria .local-nav li.video span.current,
+body.bacteria .local-nav li.video:hover span {
+	background: url(../images/css-images/icon-video.gif) no-repeat 0 -169px;
+	}
+	
+body.bacteria .local-nav li.animation span.current,
+body.bacteria .local-nav li.animation:hover span {
+	background: url(../images/css-images/icon-animation.gif) no-repeat 0 -169px;
+	}
+	
+body.bacteria .local-nav li.resources span.current,
+body.bacteria .local-nav li.resources:hover span {
+	background: url(../images/css-images/icon-resources.gif) no-repeat 0 -169px;
+	}
+	
+/* Related Experiment
+================================== */
+/* Featurebox to cross-promote experiments */
+
+.related  h3 {
+	background: url(../images/css-images/background-related-experiment-h3-taste.png) no-repeat;
+	}
+	
+.related .featurebox-inner {
+	background: url(../images/css-images/background-featurebox-taste.png) left bottom no-repeat;
+	}
+
+.related .logo-taste a {
+	background: url(../images/css-images/a-question-of-taste.png) no-repeat;
+	height: 76px;
+	}
+	
+.related a {
+	color: #643501;
+	}
