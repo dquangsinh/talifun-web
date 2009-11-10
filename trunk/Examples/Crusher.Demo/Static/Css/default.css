@@ -1,0 +1,1218 @@
+﻿* {
+	margin: 0;
+	padding: 0;
+	}
+
+img {
+	border: none
+	}
+
+/* Typography
+================================== */
+
+body {
+	font: 0.76em/1.2em Arial, sans-serif;
+	}
+
+p {
+	margin: 0.5em 0 1em 0;
+	}
+	
+	
+h1, h2, h3, h4, h5, h6, textarea {
+	font-family: Arial, sans-serif;
+	line-height:120%;
+	}
+	
+textarea {
+	font-size: 100%;
+	}
+	
+h1 {
+	font-size: 218%;
+	}
+
+h2 {
+	font-size: 164%;
+	}
+
+h3 {
+	font-size: 145%;
+	}
+	
+h3 br {
+	margin: 0 0 .7em 0;
+	}
+
+h4 {
+	font-size: 100%;
+	}
+	
+h5 {
+	font-size: 100%;
+	margin: 0.5em 0;
+	}
+	
+ul, ol {
+	margin: 0.5em 0 1em 2em;
+	line-height: 1.5em;
+	}
+	
+a {
+    color: #fff;
+    }
+	
+a.external {
+	margin-right: 0.5em; 
+	padding-right: 13px;
+	background: url(../images/external-link.gif) no-repeat right 0;
+	display: inline-block;
+	}
+	
+a.pdf {
+	background: url(../images/css-images/icon-pdf.gif) no-repeat left 0;
+	padding: 2px 0  2px  22px;
+	}
+	
+span.ecoli {
+	font-style: italic;
+	}
+	
+a:hover {
+	text-decoration: none;
+	}
+
+/* Useful
+================================== */
+
+.clear-both {
+	clear: both;
+	}
+	
+.clear-left {
+	clear: left;
+	}
+	
+.clear-right {
+	clear: right;
+	}
+
+.float-left {
+	float: left;
+	}
+	
+.float-right {
+	float: right;
+	}
+	
+.margin-top {
+	margin-top:1em;
+	}
+
+.margin-bottom {
+	margin-bottom:1em;
+	}
+
+.bold {
+	font-weight:bold;	
+	}
+
+.normal {
+	font-weight:normal;	
+	}
+
+.hr hr {
+	display: none;
+	}
+	
+.hr {
+	height: 1px;
+	margin: 5px 0;
+	border-bottom: 1px dotted #494848;
+	}
+
+/* Common structural elements
+================================== */
+
+.main-wrapper {
+	width: 960px;
+	margin: 10px auto 0 auto;
+	background: #060107 url(../images/css-images/background-main-wrapper.jpg) repeat-x 0 420px;
+	}
+	
+.main-wrapper-inner {
+	background: url(../images/css-images/background-main-wrapper-inner.jpg) no-repeat;
+	padding: 0 25px 20px 25px;
+	}
+	
+.skip-to-content {
+	text-indent: -999em;
+	height: 0;
+	}
+	
+.skip-to-content {
+	text-indent: -9999em;
+	height: 0;
+	}
+	
+.header-wrapper .logo h1 {
+	text-indent:-999em;
+	background: url(../images/css-images/background-h1-logo.jpg) no-repeat;
+	position: relative;
+	left: -45px;
+	}
+
+.header-wrapper .logo h1 a {
+	display:block;
+	width: 247px;
+	height: 173px;
+	}
+	
+.header-wrapper .logo h1 a:focus {
+	outline: none;
+	}
+
+.header-wrapper .nav-grand-wrapper {
+	position: relative;
+	top: 27px;
+	xxborder:1px solid lime;
+	}
+	
+.header-wrapper .nav-wrapper {
+	background: url(../images/css-images/background-nav-wrapper.gif) no-repeat left bottom;
+	width: 693px;
+	position: absolute;
+	left:220px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav {
+	list-style: none;
+	margin: 5px 10px;
+	min-height: 17px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li {
+	float: left;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li a {
+	border-right: 2px solid #fff;
+	margin-right: 5px;
+	padding-right: 5px;
+	text-indent: -9999em;
+	display: block;
+	height: 15px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li a:focus {
+	outline: none;
+	}
+
+.header-wrapper .nav-wrapper ul.nav li.home a {
+	background: url(../images/css-images/background-nav-home.gif) no-repeat;
+	width: 37px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.home a:hover,
+.header-wrapper .nav-wrapper ul.nav li.home span.current a {
+	background: url(../images/css-images/background-nav-home.gif) no-repeat 0 -20px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.ages-11-14 a {
+	background: url(../images/css-images/background-nav-ages-11-14.gif) no-repeat;
+	width: 67px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.ages-11-14 a:hover,
+.header-wrapper .nav-wrapper ul.nav li.ages-11-14 span.current a {
+	background: url(../images/css-images/background-nav-ages-11-14.gif) no-repeat 0 -20px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.ages-14-16 a {
+	background: url(../images/css-images/background-nav-ages-14-16.gif) no-repeat;
+	width: 69px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.ages-14-16 a:hover,
+.header-wrapper .nav-wrapper ul.nav li.ages-14-16 span.current a {
+	background: url(../images/css-images/background-nav-ages-14-16.gif) no-repeat 0 -20px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.ages-16 a {
+	background: url(../images/css-images/background-nav-ages-16.gif) no-repeat;
+	width: 74px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.ages-16 a:hover,
+.header-wrapper .nav-wrapper ul.nav li.ages-16 span.current a {
+	background: url(../images/css-images/background-nav-ages-16.gif) no-repeat 0 -20px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.order-free a {
+	background: url(../images/css-images/background-nav-order-free.gif) no-repeat;
+	width: 82px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.order-free a:hover,
+.header-wrapper .nav-wrapper ul.nav li.order-free span.current a {
+	background: url(../images/css-images/background-nav-order-free.gif) no-repeat 0 -20px;
+	}
+		
+.header-wrapper .nav-wrapper ul.nav li.cpd a {
+	background: url(../images/css-images/background-nav-cpd.gif) no-repeat;
+	width: 25px;
+	width: 62px;
+
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.cpd a:hover,
+.header-wrapper .nav-wrapper ul.nav li.cpd span.current a {
+	background: url(../images/css-images/background-nav-cpd.gif) no-repeat 0 -20px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.links a {
+	background: url(../images/css-images/background-nav-links.gif) no-repeat;
+	width: 36px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.links a:hover,
+.header-wrapper .nav-wrapper ul.nav li.links span.current a {
+	background: url(../images/css-images/background-nav-links.gif) no-repeat 0 -20px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.news a {
+	background: url(../images/css-images/background-nav-news.gif) no-repeat;
+	width: 37px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.news a:hover,
+.header-wrapper .nav-wrapper ul.nav li.news span.current a {
+	background: url(../images/css-images/background-nav-news.gif) no-repeat 0 -20px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.about a {
+	background: url(../images/css-images/background-nav-about.gif) no-repeat;
+	width: 41px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.about a:hover,
+.header-wrapper .nav-wrapper ul.nav li.about span.current a {
+	background: url(../images/css-images/background-nav-about.gif) no-repeat 0 -20px;
+	}	
+	
+.header-wrapper .nav-wrapper ul.nav li.contact a {
+	border-right: none;
+	margin-right: 0;
+	padding-right: 0;
+	background: url(../images/css-images/background-nav-contact.gif) no-repeat;
+	width: 60px;
+	}
+	
+.header-wrapper .nav-wrapper ul.nav li.contact a:hover,
+.header-wrapper .nav-wrapper ul.nav li.contact span.current a {
+	background: url(../images/css-images/background-nav-contact.gif) no-repeat 0 -20px;
+	}	
+
+.footer-wrapper {
+	width: 960px;
+	margin: 0 auto 10px auto;
+	padding-bottom: 10px;
+	}
+
+.footer-wrapper .footer-links,
+.footer-wrapper .bookmark-links {
+	min-height: 1em;
+	}
+	
+.footer-wrapper .footer-links ul {
+	list-style: none;
+	font-size: 90%;
+	margin-top: 10px;
+	}
+	
+.footer-wrapper .footer-links ul li {
+	float: left;
+	}
+	
+.footer-wrapper .footer-links ul li a {
+	color: #5F5F5F;
+	text-decoration: none;
+	border-right: 1px solid #848584;
+	margin-right: 10px;
+	padding-right: 10px;
+	}
+	
+.footer-wrapper .footer-links ul li.last a {
+	border-right: none;
+	margin-right: 0;
+	padding-right: 0;
+	}	
+	
+.footer-wrapper .bookmark-links ul {
+	list-style: none;
+	font-size: 90%;
+	margin-top: 10px;
+	}
+	
+.footer-wrapper .bookmark-links ul li {
+	float: left;
+	}
+	
+.footer-wrapper .bookmark-links ul li a {
+	color: #3A237B;
+	text-decoration: none;
+	padding-left: 20px;
+	min-height: 20px;
+	display: inline-block;
+	margin-right: 10px;
+	}
+	
+.footer-wrapper .bookmark-links ul li.delicious a {
+	background: url(../images/css-images/delicious.gif) no-repeat;
+	}
+	
+.footer-wrapper .bookmark-links ul li.digg a {
+	background: url(../images/css-images/digg.gif) no-repeat;
+	}
+	
+.footer-wrapper .bookmark-links ul li.reddit a {
+	background: url(../images/css-images/reddit.gif) no-repeat;
+	}
+	
+.footer-wrapper .bookmark-links ul li.stumpleupon a {
+	background: url(../images/css-images/stumpleupon.gif) no-repeat;
+	}
+	
+.footer-wrapper ul li a:hover {
+	text-decoration: underline;
+	}
+		
+.footer-wrapper .footer-logos img {
+	margin: 0 10px 10px 10px;
+	}
+	
+.footer-wrapper .footer-logos .darwin img {
+	position: relative;
+	top: 5px;
+	}
+	
+/* Homepage elements
+================================== */
+
+.title-wrapper {
+	width: 600px;
+	margin-bottom: 10px;
+	}
+	
+/* Free Experiments For Schools Inspired by Darwin... */
+
+.title-wrapper h2 {
+	color: #fff;
+	padding-left: 10px;
+	width: 469px;
+	height: 84px;
+	background: url(../images/css-images/background-title-wrapper-h2.png) no-repeat;
+	text-indent: -9999em;
+	}
+	
+.title-wrapper h2 span {
+	display: block;
+	color: #FCADF6;
+	}
+
+.title-wrapper h2.order-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-order.png) no-repeat;
+	}
+
+.title-wrapper h2.cpd-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-cpd.png) no-repeat;
+	}
+	
+.title-wrapper h2.links-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-links.png) no-repeat;
+	}	
+
+.title-wrapper h2.about-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-about.png) no-repeat;
+	}
+	
+.title-wrapper h2.contact-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-contact.png) no-repeat;
+	}	
+	
+.main-content-wrapper .intro-content-inner h2 {
+	height:35px;
+	text-indent:-9999em;
+	width:400px;
+	}
+	
+.main-content-wrapper .intro-content-inner h2.intro {
+	background: url(../images/css-images/background-intro-content-inner-h2.gif) no-repeat;
+	}
+
+.main-content-wrapper .intro-content-inner h2.worm {
+	background: url(../images/css-images/background-intro-content-inner-h2-worm.gif) no-repeat;
+	}
+
+.main-content-wrapper .intro-content-inner h2.brine {
+	background: url(../images/css-images/background-intro-content-inner-h2-brine.gif) no-repeat;
+	}
+	
+.main-content-wrapper .intro-content-inner h2.bacteria {
+	background: url(../images/css-images/background-intro-content-inner-h2-bacteria.gif) no-repeat;
+	}
+
+/* Free to order */
+.title-wrapper h3.free-to-order {
+	text-indent:-999em;
+	background: url(../images/css-images/background-free-to-order.png) no-repeat;
+	margin-top: -90px;	
+	}
+
+.title-wrapper h3.free-to-order a {
+	display: block;
+	width: 119px;
+	height: 119px;
+	}
+	
+.title-wrapper h3.free-to-order a:focus {
+	outline: none;
+	}
+	
+.intro-wrapper {
+	color: #fff;
+	}
+	
+.intro-wrapper .intro-content {
+	width: 600px;
+	height: 345px;
+	}
+	
+.header img {
+	border: 1px solid #fff;
+	}
+		
+/* Intro panel
+================================== */
+
+.intro-wrapper .intro-content h2 {
+	text-indent: -9999em;
+	width: 400px;
+	height: 35px;
+	}
+	
+.intro-content a { 
+	color: #FCADF6;
+	position: absolute;
+	z-index: 1;
+	display: block;	
+	}
+	
+.intro-wrapper .intro-content h2.intro {
+	background:url(../images/css-images/background-intro-content-inner-h2.gif) no-repeat;
+	}
+	
+.intro-wrapper .intro-content h2.worm {
+	background:url(../images/css-images/background-intro-content-inner-h2-worm.gif) no-repeat;
+	}
+	
+.intro-wrapper .intro-content h2.brine {
+	background:url(../images/css-images/background-intro-content-inner-h2-brine.gif) no-repeat;
+	}
+	
+.intro-wrapper .intro-content h2.bacteria {
+	background:url(../images/css-images/background-intro-content-inner-h2-bacteria.gif) no-repeat;
+	}
+	
+.intro-wrapper .content {
+	width: 380px;
+	padding: 10px;
+	}
+	
+.intro-wrapper .image {
+	width: 200px;	/* Used on homepage */
+	}
+	
+.intro-content-inner .content h3 {
+	font-size: 140%;
+	line-height: 110%;
+	margin-bottom: 10px;
+	}
+	
+.intro-wrapper .full-image {
+	width: 600px;	/* Used on sub-pages */
+	}
+	
+h2.section-logo {
+	display:none;	/* Used on sub-pages */
+	}
+
+.intro-content-inner {
+	width: 600px;
+	min-height: 345px;
+	border: 1px solid #fff;
+	}
+
+.intro-content-inner .content {
+	width: 380px;
+	padding: 10px;
+	}
+
+.intro-content-inner .content {
+	background: url(../images/css-images/background-intro-content.png) top left no-repeat;
+	min-height: 311px;
+	}
+	
+.intro-content-inner .image {
+	width: 200px;
+	}
+	
+
+/* Content layout
+================================== */
+	
+.content-wrapper {
+	color: #fff;
+	margin-top: 15px;
+	}		
+
+/* Main content
+================================== */
+	
+.main-content-wrapper {
+	width: 602px;
+	}
+	
+.main-content-wrapper h3.first {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    }
+
+.main-content-wrapper a.place-your-order {
+	display:block;
+	text-indent:-9999em;
+	width: 200px;
+	height:40px;
+	margin:1.5em auto;
+	background: url(../images/place-your-order-button.png) no-repeat;
+	}
+	
+.main-content-wrapper a.place-your-order:focus {
+	outline: none;
+	}
+
+.order-wrapper .order-content {
+	width: 380px;
+	}
+	
+.order-wrapper .order-image{ 
+	width: 200px;
+	}
+	
+.order-wrapper .order-content h4 {
+    margin: 1em 0;
+	}
+	
+.main-content-wrapper p { 
+	margin-top:0px;
+	line-height:1.4;
+	}	
+	
+.main-content-wrapper a,
+.main-content-wrapper h3,
+.main-content-wrapper h4 { 
+	color: #FCADF6;
+	}
+
+.main-content-wrapper h3 { 
+	font-size:1.7em;
+	}
+	
+.main-content-wrapper h4 { 
+	font-weight:bold;
+	font-size:1.4em;
+	}
+
+.main-content-wrapper h4.order-free { 
+	font-size:1.3em;
+	color:#fff;
+	margin: 10px 0;
+	}
+	
+.main-content-wrapper h3,
+.main-content-wrapper h4 {
+	text-transform: none;
+	}
+
+/* Image replacement content headings */	
+.main-content-wrapper h2 { 
+	text-indent: -9999em;
+	background: url(../images/css-images/background-h3-about.gif) no-repeat;
+	width: 151px;
+	height: 19px;
+	}	
+
+h2.news-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-news.png) no-repeat left bottom;
+	}	
+
+h2.accessibility-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-accessibility.png) no-repeat left bottom;
+	width: 220px;
+	}	
+
+h2.terms-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-terms.png) no-repeat left bottom;
+	width: 360px;
+	}	
+	
+.title-wrapper h2.disclaimer-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-disclaimer.png) no-repeat left bottom;
+	}
+	
+h2.site-map-h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-site-map.png) no-repeat left bottom;
+	width: 220px;
+	}	
+
+.main-content-wrapper h3.about.gp-logo { 
+	background: url(../images/css-images/background-h3-gp-logo.gif) no-repeat;
+	width: 200px;
+	height: 26px;
+	}	
+
+.main-content-wrapper h3.about.wellcome-logo { 
+	background: url(../images/css-images/background-h3-wellcome-logo.gif) no-repeat;
+	width: 150px;
+	height: 26px;
+	margin-top:0px;
+	}
+
+.main-content-wrapper h3.about.phillip-harris-logo { 
+	background: url(../images/css-images/background-h3-phillip-harris-logo.gif) no-repeat;
+	width: 150px;
+	height: 52px;
+	}
+
+.main-images-right {
+	margin:0.5em 0 0.5em 1em;
+	}
+
+.main-images-left {
+	margin:0.5em 1em 0.5em 0em;	
+	}
+
+/* Left column and featureboxes
+================================== */
+
+.left-col {
+	width: 270px;
+	margin-left: 20px;
+	}
+	
+.featurebox {
+	margin-bottom: 10px;
+	font-size: 0.9em;
+	}
+	
+.featurebox  .featurebox-inner {
+	background: url(../images/css-images/background-featurebox.png) left bottom no-repeat;
+	padding: 5px 10px 10px 10px;
+	}
+	
+.featurebox  p,
+.featurebox  h4  {
+	color: #000;
+	margin: 0;
+	padding: 0;
+	}	
+	
+.featurebox span, 
+.featurebox a { 
+	color: #7A2E83;
+	}
+	
+/* Image replacement featurebox headings */
+.featurebox  h3 {
+	height: 30px;
+	}
+	
+.featurebox h3 a {
+	display: block;
+	width: 270px;
+	text-indent: -9999em;
+	}	
+
+.featurebox h3 a:focus {
+	outline: none;
+	}
+	
+.age-range-1  h3 {
+	background: url(../images/css-images/background-age-range-1-h3.png) no-repeat;
+	}
+	
+.age-range-2  h3 {
+	background: url(../images/css-images/background-age-range-2-h3.png) no-repeat;
+	}
+	
+.age-range-3  h3 {
+	background: url(../images/css-images/background-age-range-3-h3.png) no-repeat;
+	}
+	
+.latest-news  h3 {
+	background: url(../images/css-images/background-latest-news-h3.png) no-repeat;
+	text-indent: -9999em;
+	}
+	
+.more-info  h3 {
+	background: url(../images/css-images/background-more-info-h3.png) no-repeat;
+	text-indent: -9999em;
+	}
+	
+/* Age range featureboxes with logo */
+
+.age-range-wrapper {
+	width: 270px;
+	}
+	
+.featurebox-inner  {
+	min-height: 63px;	/* Used to trim age-range featureboxes - reset on order boxes */
+	}
+	
+.age-range-wrapper .logo,
+.related .logo,
+.age-range-wrapper .kit,
+.related .logo-taste a {
+	text-indent: -9999em;
+	position: absolute;
+	}
+		
+.age-range-wrapper .logo a,
+.related .logo a {
+	display: block;
+	width: 129px;
+	height: 100px;
+	position: relative;
+	left: -35px;
+	top: -25px;
+	}
+	
+.related .logo-taste a {
+	display: block;
+	width: 109px;
+	height: 76px;
+	left: 0;
+	top: 0;
+	position: relative;
+	}
+	
+.related .logo-taste {
+	position: relative;
+	left: 19px;
+	margin-top: -17px;
+	}
+		
+.age-range-wrapper .kit a {
+	display: block;
+	width: 120px;
+	height: 80px;
+	position: relative;
+	left: -35px;
+	top: -25px;
+	}
+	
+.age-range-wrapper .logo a:focus,
+.related .logo a:focus,
+.age-range-wrapper .kit a:focus {
+	outline: none;
+	}
+	
+.age-range-1 .logo a {
+	background: url(../images/css-images/im-a-worm-get-me-out-of-here.png) no-repeat;
+	}
+	
+.age-range-2 .logo a {
+	background: url(../images/css-images/brine-date.png) no-repeat;
+	}
+	
+.age-range-3 .logo a {
+	background: url(../images/css-images/x-bacteria.png) no-repeat;
+	}
+	
+.age-range-1 .kit a {
+	background: url(../images/css-images/wormkit.png) no-repeat;
+	}
+	
+.age-range-2 .kit a {
+	background: url(../images/css-images/brinekit.png) no-repeat;
+	}
+	
+.age-range-3 .kit a {
+	background: url(../images/css-images/bacteriakit.png) no-repeat;
+	}	
+		
+.age-range-wrapper p,
+.related  p {
+	width: 140px;
+	}	
+	
+/* Order now button with featureboxes */
+.featurebox  p.order-now-free {
+	padding-top: 5px;
+	}
+
+.featurebox  .order-now-free {
+	text-indent: -9999em;
+	display: block;
+	} 
+
+.featurebox  .order-now-free a {
+	display:block;
+	width: 126px;
+	height: 21px;
+	background:transparent url(../images/order-now.png) no-repeat 0 0;
+	}
+
+.featurebox  .order-now-free a:focus {
+	outline: none;
+	}
+
+/* Form
+================================== */
+
+.form-row {
+	clear: both;
+	padding: 10px 0;
+	}
+
+.form-row label {
+	display: block;
+	float: left;
+	font-weight: bold;
+	width: 100px;
+	text-align: right;
+	margin-right: 10px;
+	}
+	
+.text-field input,
+.form-row textarea {
+	width: 488px;
+	float: left;
+	}
+	
+.form-row textarea {
+	height: 200px;
+	}
+	
+.form-row select {
+	width: 492px;
+	float: left;
+	}
+
+.button input {
+	float: right;
+	color: #fff;
+	background-color: #D43922; 
+	padding: 2px 5px;
+	border-top: 1px solid #D43922; 
+	border-left: 1px solid #D43922; 
+	border-right: 1px solid #BF2F17; 
+	border-bottom: 1px solid #BF2F17;
+	}
+
+.button input:hover {
+	background-color: #BF2F17; 
+	border-top: 1px solid #BF2F17; 
+	border-left: 1px solid #BF2F17; 
+	border-right: 1px solid #D43922; 
+	border-bottom: 1px solid #D43922; 
+	}
+	
+.error {
+	color: #F29DF5 !important;
+	margin-left: 5px;
+	font-weight: bold;
+	}
+	
+/* Item layouts
+================================== 
+Used for news, link & company items */
+
+.item-wrapper .item-content p {
+	margin: 0;
+	}
+	
+.about .item-wrapper .item-content p {
+	margin: 0.5em 0 1em 0;
+	}
+	
+.item-wrapper .item-content h3 a {
+	text-decoration: none;
+	}
+	
+.item-wrapper .item-content h3 a:hover {
+	text-decoration: underline;
+	}
+	
+.item-content {
+	width: 365px;
+	}
+	
+.news .item-content {
+	width: auto;
+	}
+		
+.item-image img {
+	width: 200px;
+	padding: 3px;
+	border: 1px solid #948A95;
+	margin-bottom: 5px;
+	}
+	
+.item-image {
+	width: 208px;
+	overflow: hidden;
+	}
+	
+.item-wrapper .hr {
+	border-bottom: 1px dotted #948A95;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	}
+	
+/* Media panel
+================================== */
+
+.media-panel {
+	width: 600px;
+	border: 1px solid #fff;
+	min-height: 350px;
+	}
+	
+.media-panel .flash-replaced {
+    height: 350px;
+    }
+
+.media-panel .content {
+	width: 380px;
+	padding: 10px;
+	}
+
+.media-panel .content {
+	background: url(../images/css-images/background-intro-content.png) top left no-repeat;
+	min-height: 330px;
+	}
+	
+.media-panel h3 {
+    text-indent: -9999em;
+    display: block;
+    height: 28px;
+	margin-bottom: 10px;
+    }
+	
+.media-panel h3.about {
+	width: 304px;
+	background: url(../images/css-images/background-about-this-experiment.png) no-repeat;
+    }
+	
+.media-panel h3.resources {
+	width: 143px;
+	background: url(../images/css-images/background-resources.png) no-repeat;
+    }
+   
+.media-panel p {
+    margin-bottom: 0.75em;
+    }
+	
+.media-panel .image {
+	width: 200px;
+	height: 350px;
+	}
+
+.media-panel .controls  {
+	background: url(../images/css-images/background-media-panel-controls.jpg) top left repeat-x;
+	width: 600px;
+	height: 32px; 
+	}
+	
+.media-panel .controls ul {
+	list-style: none;
+	margin: 0;
+	line-height: normal;
+	height: 32px; 
+	}
+	
+.media-panel .controls ul li {
+	float: left;
+	}
+	
+.media-panel .controls ul li a {
+	padding: 0 7px;
+	text-indent: -9999em;
+	display: block;
+	height: 32px; 
+	width: 135px;
+	border-right: 1px solid #2C2C2C;
+	}
+	
+.media-panel .controls ul li a:focus {
+	outline: none;
+	}
+
+.media-panel .controls ul li.about a {
+	background: url(../images/css-images/background-media-panel-controls-about.png) no-repeat center center;
+	}
+	
+.media-panel .controls ul li.video a {
+	background: url(../images/css-images/background-media-panel-controls-video.png) no-repeat center center;
+	}
+	
+.media-panel .controls ul li.game a {
+	background: url(../images/css-images/background-media-panel-controls-game.png) no-repeat center center;
+	}
+	
+.media-panel .controls ul li.animation a {
+	background: url(../images/css-images/background-media-panel-controls-animation.png) no-repeat center center;
+	}
+	
+.media-panel .controls ul li.resources a {
+	background: url(../images/css-images/background-media-panel-controls-resources.png) no-repeat center center;
+	border-right: none;
+	}
+	
+/* Local nav - generic styles
+================================== */
+
+body.worm .left-col,
+body.brine .left-col,
+body.bacteria .left-col {
+	margin-top: -114px; /* To pull up left-col nav of age pages*/
+	}
+
+.local-nav h3 {
+	text-indent: -9999em;
+	}
+	
+.local-nav ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	}
+
+.local-nav li {
+	border-bottom: 1px dotted #494848;
+	font-size: 118%;
+	clear: both;
+	min-height: 30px;
+	margin-bottom: 5px;
+	}
+	
+.local-nav li.last {
+	border-bottom: none;
+	padding-bottom: 0;
+	margin-bottom: 0;
+	min-height: 25px;
+	}
+	
+.local-nav li span.icon {
+	display: inline-block;
+	height: 25px;
+	width: 25px;
+	float: left;
+	margin-right: 2px;
+	}
+	
+.local-nav li.current a {
+	font-weight: bold;
+	}
+	
+.local-nav li a {
+	float: left;
+	padding: 5px;
+	}
+	
+/* Icons */
+
+.local-nav li.home span.icon {
+	background: url(../images/css-images/icon-home.gif) no-repeat;
+	}
+		
+.local-nav li.video span.icon {
+	background: url(../images/css-images/icon-video.gif) no-repeat;
+	}
+	
+.local-nav li.animation span.icon {
+	background: url(../images/css-images/icon-animation.gif) no-repeat;
+	}
+	
+.local-nav li.resources span.icon {
+	background: url(../images/css-images/icon-resources.gif) no-repeat;
+	}
+	
+.local-nav li.survey span.icon {
+	background: url(../images/css-images/icon-survey.gif) no-repeat;
+	}
+	
+.local-nav li.results span.icon {
+	background: url(../images/css-images/icon-results.gif) no-repeat;
+	}
+	
+.local-nav li.workshops span.icon {
+	background: url(../images/css-images/icon-workshops.gif) no-repeat;
+	}
+
+/* Order Free - generic styles
+================================== */
+
+.order-free h3 {
+	text-indent: -9999em;
+	}
+	
+.order-free .kit {
+	margin-left: -35px;
+	margin-top: -42px;
+	text-indent: -9999em;
+	}
+
+.order-free .kit a {
+	display: block;
+	width: 120px;
+	height: 96px;
+	}
+	
+.order-free .kit a:focus {
+	outline: none;
+	}
+	
+.order-free p {
+	width: 150px;
+	}
+
+/* Image layout
+================================== */
+
+.image-wrapper img {
+	padding: 3px;
+	border: 1px solid #948A95;
+	margin: 0 5px 10px 5px;
+	}
+	
+.image-wrapper .image-content {
+	width: 390px;
+	}
+	
+.image-wrapper img.first {
+	margin-left: 0;
+	}
+	
+.image-wrapper img.last {
+	margin-right: 0;
+	}
+	
+/* Helpline
+================================== */
+.helpline {
+    color: #fff;
+    margin: 0 auto 1em 0;
+    text-align: center;
+    }

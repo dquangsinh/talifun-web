@@ -1,0 +1,78 @@
+﻿/* Backgrounds & colours
+================================== */
+
+body.brine .main-wrapper-inner {
+	background: url(../images/css-images/background-main-wrapper-inner-brine.jpg) no-repeat 0 0;
+	}
+	
+body.brine .main-wrapper {
+	background: #000000 url(../images/css-images/background-main-wrapper-brine.jpg) repeat-x 0 585px;
+	}
+	
+body.brine .mask-top {
+	background: url(../images/css-images/mask-intro-top-brine.png) no-repeat;
+	}
+	
+body.brine .mask-bottom {
+	background: url(../images/css-images/mask-intro-bottom-brine.png) no-repeat left bottom;
+	}
+	
+body.brine .title-wrapper h2 {
+	background: url(../images/css-images/background-title-wrapper-h2-brine.png) no-repeat;
+	}
+	
+body.brine .order-free h3 {
+	background: url(../images/css-images/background-order-free-h3-brine.png) no-repeat;
+	}
+
+body.brine .local-nav h3 {
+	background: url(../images/css-images/background-local-nav-h3-brine.png) no-repeat;
+	}
+	
+.age-range-2 .featurebox-inner,
+body.brine .order-free .featurebox-inner,
+body.brine .local-nav .featurebox-inner {
+	background: url(../images/css-images/background-featurebox-brine.png) left bottom no-repeat;
+	}
+	
+.age-range-2 a,
+body.brine .order-free a,
+body.brine .local-nav a  { 
+	color: #014366;
+	}
+	
+body.brine .order-free .kit a {
+	background: url(../images/css-images/brinekit.png) no-repeat;
+	}
+	
+body.brine .main-content-wrapper a,
+body.brine .media-panel-inner a,
+body.brine .main-content-wrapper h3,
+body.brine .main-content-wrapper h4 { 
+	color: #82DDED;
+	}
+	
+body.brine .media-panel .controls ul li.current,
+body.brine .media-panel .controls ul li:hover {
+	background: url(../images/css-images/background-media-panel-controls-selected-brine.jpg) top left repeat-x;
+	}
+	
+body.brine .local-nav li.home span.current,
+body.brine .local-nav li.home:hover span {
+	background: url(../images/css-images/icon-home.gif) no-repeat 0 -113px;
+	}
+	
+body.brine .local-nav li.video span.current,
+body.brine .local-nav li.video:hover span {
+	background: url(../images/css-images/icon-video.gif) no-repeat 0 -113px;
+	}
+	
+body.brine .local-nav li.animation span.current,
+body.brine .local-nav li.animation:hover span {
+	background: url(../images/css-images/icon-animation.gif) no-repeat 0 -113px;
+	}
+	
+body.brine .local-nav li.resources span.current,
+body.brine .local-nav li.resources:hover span {
+	background: url(../images/css-images/icon-resources.gif) no-repeat 0 -113px;
+	}
