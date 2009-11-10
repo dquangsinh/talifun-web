@@ -3,12 +3,15 @@
 
 = Introduction =
 
-Add your content here.
+An http handler that will serve static files in a cached, compressed and resumable manner.
 
+= When to use it =
 
-= Details =
+When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+= Features =
+
+* Resumable downloads (206 partial)
+* Client side caching (304 not modified): ETags, expires
+* Compression: none, gzip, deflate
+* Cached: stores orginal and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial conent can be servered from memory too.
