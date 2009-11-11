@@ -1,9 +1,26 @@
-#summary A handler that supports partial requests; caching; compression.
-#labels Static,File
-
+#summary An http handler that will serve static files in a cached, compressed and resumable manner.
+#labels Static,File,compress,cached,resumable,partial,206,304
 = Introduction =
 
 An http handler that will serve static files in a cached, compressed and resumable manner.
+
+It generates consistent etags and the correct meta tags for caching on proxies and locally. This is especially useful when you don't have control over the configuration of the webserver.
+
+It supports the following caching http header tags:
+
+  * Accept-Ranges
+  * ETag
+  * Expires
+  * Last-Modified
+  * Range
+  * If-Range
+  * If-Match
+  * If-None-Match
+  * If-Modified-Since
+  * If-Unmodified-Since
+  * Unless-Modified-Since
+
+It can also serve cached requests and compressed cached requests from memory bypassing the hard drive. 
 
 = When to use it =
 
