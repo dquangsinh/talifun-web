@@ -5,6 +5,8 @@
 
 A module that compresses js into a single file, and css into a single file.
 
+It also watches for changes to any of the watched css or js files and regenerates the crushed file. It generates a unique hash for the crushed file and appends it to the css url and the js url. So you are always sure to be served the correct content, regardless of caching.
+
 = When to use it =
 
 When you want to minimize the number of http requests and the size of js and css files.
@@ -16,3 +18,6 @@ When you want to minimize the number of http requests and the size of js and css
   * Always serves latest version of crushed file by appending hash of crushed file to url
   * Detects any changes to component js or css files and regenerates crushed file on the fly
   * Supports multiple grouping of js or css
+  * Debug mode for when you need to work with the css or js
+
+= Configuration =
