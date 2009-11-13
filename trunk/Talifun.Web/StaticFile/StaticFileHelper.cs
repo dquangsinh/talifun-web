@@ -47,7 +47,7 @@ namespace Talifun.Web.StaticFile
             var fileExtensionElements = CurrentStaticFileHandlerConfiguration.Current.FileExtensions;
             foreach (FileExtensionElement fileExtension in fileExtensionElements)
             {
-                var extensions = fileExtension.Extension.Split(new string[]{","}, StringSplitOptions.RemoveEmptyEntries);
+                var extensions = fileExtension.Extension.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var extension in extensions)
                 {
@@ -58,15 +58,15 @@ namespace Talifun.Web.StaticFile
                     }
 
                     var fileExtensionElement = new FileExtensionMatch
-                                                   {
-                                                       Compress = fileExtension.Compress,
-                                                       Extension = fileExtension.Extension,
-                                                       MaxMemorySize = fileExtension.MaxMemorySize,
-                                                       ServeFromMemory = fileExtension.ServeFromMemory,
-                                                       EtagMethod = fileExtension.EtagMethod,
-                                                       Expires = fileExtension.Expires,
-                                                       MemorySlidingExpiration = fileExtension.MemorySlidingExpiration
-                                                   };
+                    {
+                        Compress = fileExtension.Compress,
+                        Extension = fileExtension.Extension,
+                        MaxMemorySize = fileExtension.MaxMemorySize,
+                        ServeFromMemory = fileExtension.ServeFromMemory,
+                        EtagMethod = fileExtension.EtagMethod,
+                        Expires = fileExtension.Expires,
+                        MemorySlidingExpiration = fileExtension.MemorySlidingExpiration
+                    };
 
                     fileExtensionMatches.Add(key, fileExtensionElement);
                 }
@@ -75,21 +75,32 @@ namespace Talifun.Web.StaticFile
             var fileExtensionElementDefault = CurrentStaticFileHandlerConfiguration.Current.FileExtensionDefault;
 
             fileExtensionMatchDefault = new FileExtensionMatch
-                                            {
-                                                Compress = fileExtensionElementDefault.Compress,
-                                                Extension = string.Empty,
-                                                MaxMemorySize = fileExtensionElementDefault.MaxMemorySize,
-                                                ServeFromMemory = fileExtensionElementDefault.ServeFromMemory,
-                                                EtagMethod = fileExtensionElementDefault.EtagMethod,
-                                                Expires = fileExtensionElementDefault.Expires,
-                                                MemorySlidingExpiration = fileExtensionElementDefault.MemorySlidingExpiration
-                                            };
+            {
+                Compress = fileExtensionElementDefault.Compress,
+                Extension = string.Empty,
+                MaxMemorySize = fileExtensionElementDefault.MaxMemorySize,
+                ServeFromMemory = fileExtensionElementDefault.ServeFromMemory,
+                EtagMethod = fileExtensionElementDefault.EtagMethod,
+                Expires = fileExtensionElementDefault.Expires,
+                MemorySlidingExpiration = fileExtensionElementDefault.MemorySlidingExpiration
+            };
         }
 
         public static void ProcessRequest(HttpContext context)
         {
             var request = context.Request;
             var response = context.Response;
+
+            var physicalFilePath = request.PhysicalPath;
+            var file = new FileInfo(physicalFilePath);
+
+            ProcessRequest(request, response, file);
+        }
+
+        public static void ProcessRequest(HttpRequest request, HttpResponse response, FileInfo file)
+        {
+            var physicalFilePath = file.FullName;
+            var fileExtension = file.Extension.ToLower(); //in case url rewriting did something smart
 
             if (!ValidateHttpMethod(request))
             {
@@ -98,18 +109,15 @@ namespace Talifun.Web.StaticFile
                 return;
             }
 
-            if (request.FilePath.EndsWith(".asp", StringComparison.InvariantCultureIgnoreCase) ||
-                request.FilePath.EndsWith(".aspx", StringComparison.InvariantCultureIgnoreCase))
+            if (physicalFilePath.EndsWith(".asp", StringComparison.InvariantCultureIgnoreCase) ||
+                physicalFilePath.EndsWith(".aspx", StringComparison.InvariantCultureIgnoreCase))
             {
                 //If we are unable to parse url send 403 Path Forbidden
                 SendForbidden(response);
                 return;
             }
 
-            var physicalFilePath = request.PhysicalPath;
             var compressionType = GetCompressionMode(request);
-            var file = new FileInfo(physicalFilePath);
-            var fileExtension = file.Extension.ToLower(); //in case url rewriting did something smart
 
             FileExtensionMatch fileExtensionMatch = null;
             if (!fileExtensionMatches.TryGetValue(fileExtension, out fileExtensionMatch))
@@ -147,7 +155,7 @@ namespace Talifun.Web.StaticFile
                     return;
                 }
 
-                //File to large to send
+                //File too large to send
                 if (file.Length > MAX_FILE_SIZE_TO_SERVE)
                 {
                     SendRequestedEntityIsTooLargeResponseHeaders(response);
@@ -162,8 +170,8 @@ namespace Talifun.Web.StaticFile
                 //ETAG is always calculated from uncompressed entity data
                 switch (fileExtensionMatch.EtagMethod)
                 {
-                    case EtagMethodType.MD5 :
-                        etag = HashHelper.CalculateMd5Etag(file); 
+                    case EtagMethodType.MD5:
+                        etag = HashHelper.CalculateMd5Etag(file);
                         break;
                     case EtagMethodType.LastModified:
                         etag = lastModified.ToString();
@@ -173,12 +181,12 @@ namespace Talifun.Web.StaticFile
                 }
 
                 fileHandlerCacheItem = new FileHandlerCacheItem
-                                           {
-                                               EntityEtag = etag,
-                                               EntityLastModified = lastModified,
-                                               ContentLength = contentLength,
-                                               EntityContentType = contentType
-                                           };
+                {
+                    EntityEtag = etag,
+                    EntityLastModified = lastModified,
+                    ContentLength = contentLength,
+                    EntityContentType = contentType
+                };
 
                 if (fileExtensionMatch.ServeFromMemory
                     && (contentLength <= fileExtensionMatch.MaxMemorySize))
@@ -825,7 +833,7 @@ namespace Talifun.Web.StaticFile
             if (!string.IsNullOrEmpty(requestHeaderRange))
             {
                 //It is a partial request
-                responseCode = (int) HttpStatusCode.PartialContent;
+                responseCode = (int)HttpStatusCode.PartialContent;
             }
 
             var ifRange = CheckIfRange(request, etag, lastModified);
@@ -845,7 +853,7 @@ namespace Talifun.Web.StaticFile
                     return false;
                 }
 
-                responseCode = (int) HttpStatusCode.NotModified;
+                responseCode = (int)HttpStatusCode.NotModified;
             }
 
             bool? ifNoneMatch = null;
@@ -874,7 +882,7 @@ namespace Talifun.Web.StaticFile
                     //If the request normally (i.e., without the If-Unmodified-Since header) 
                     //would result in anything other than a 2xx or 412 status, 
                     //the If-Unmodified-Since header SHOULD be ignored.
-                    responseCode = (int) HttpStatusCode.PreconditionFailed;
+                    responseCode = (int)HttpStatusCode.PreconditionFailed;
                 }
             }
 
@@ -891,7 +899,7 @@ namespace Talifun.Web.StaticFile
                     //If the request normally (i.e., without the If-Unmodified-Since header) 
                     //would result in anything other than a 2xx or 412 status, 
                     //the If-Unmodified-Since header SHOULD be ignored.
-                    responseCode = (int) HttpStatusCode.PreconditionFailed;
+                    responseCode = (int)HttpStatusCode.PreconditionFailed;
                 }
             }
 
@@ -907,7 +915,7 @@ namespace Talifun.Web.StaticFile
 
                     //If the request would, without the If-Match header field, result in 
                     //anything other than a 2xx or 412 status, then the If-Match header MUST be ignored.
-                    responseCode = (int) HttpStatusCode.PreconditionFailed;
+                    responseCode = (int)HttpStatusCode.PreconditionFailed;
                 }
             }
 
@@ -936,7 +944,7 @@ namespace Talifun.Web.StaticFile
                 return true;
             }
 
-            if (responseCode == (int) HttpStatusCode.PartialContent)
+            if (responseCode == (int)HttpStatusCode.PartialContent)
             {
                 SendPartialContentResponseHeaders(response);
                 return false;
