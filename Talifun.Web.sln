@@ -9,31 +9,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talifun.Web", "Talifun.Web\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Talifun.Web Examples", "Talifun.Web Examples", "{BBD8CE05-D20C-4F98-B1BF-1F48378FA1C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlRewriter.Demo", "Talifun.Web Examples\UrlRewriter.Demo\UrlRewriter.Demo.csproj", "{EB258590-626C-4F1D-ABEE-E863551BB5EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlRewriter.Demo", "Talifun.Web.Examples\UrlRewriter.Demo\UrlRewriter.Demo.csproj", "{EB258590-626C-4F1D-ABEE-E863551BB5EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LogUrl", "LogUrl", "{6585BAE3-7D86-4204-B2BF-F70F5CAE84F2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UrlReWriter", "UrlReWriter", "{5486B4C8-67EA-46B7-BFAE-3C812AF2CEDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlReWriter.Demo.CustomUrlRewriter", "Talifun.Web Examples\UrlReWriter.Demo.CustomUrlRewriter\UrlReWriter.Demo.CustomUrlRewriter.csproj", "{3E797996-D4C7-45D1-8B5F-B3C87FC4F886}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlReWriter.Demo.CustomUrlRewriter", "Talifun.Web.Examples\UrlReWriter.Demo.CustomUrlRewriter\UrlReWriter.Demo.CustomUrlRewriter.csproj", "{3E797996-D4C7-45D1-8B5F-B3C87FC4F886}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crusher.Demo", "Talifun.Web Examples\Crusher.Demo\Crusher.Demo.csproj", "{0F576746-2042-433F-8543-FCB9321FDEF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crusher.Demo", "Talifun.Web.Examples\Crusher.Demo\Crusher.Demo.csproj", "{0F576746-2042-433F-8543-FCB9321FDEF0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Crusher", "Crusher", "{AC3BF142-79EA-49B1-981B-5AFFFDF159B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StaticFile", "StaticFile", "{82555643-CEBB-4480-BDDA-7C9A30186C2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticFile.Demo", "Talifun.Web Examples\StaticFile.Demo\StaticFile.Demo.csproj", "{EE3D28B2-2146-4078-BC89-2A4270257085}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticFile.Demo", "Talifun.Web.Examples\StaticFile.Demo\StaticFile.Demo.csproj", "{EE3D28B2-2146-4078-BC89-2A4270257085}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compress", "Compress", "{EE1C4A97-AF23-47B9-BF12-0DE8C7B11420}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compress.Demo", "Talifun.Web Examples\Compress.Demo\Compress.Demo.csproj", "{F4AB8CB0-90E3-46D6-93E1-8C796F388E68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compress.Demo", "Talifun.Web.Examples\Compress.Demo\Compress.Demo.csproj", "{F4AB8CB0-90E3-46D6-93E1-8C796F388E68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CssSprite", "CssSprite", "{B4E9160F-A459-4131-97B6-6C410FC2E61A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CssSprite.Demo", "Talifun.Web Examples\CssSprite.Demo\CssSprite.Demo.csproj", "{B28274C1-B220-4D3B-9CB4-DD3A5D877B02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CssSprite.Demo", "Talifun.Web.Examples\CssSprite.Demo\CssSprite.Demo.csproj", "{B28274C1-B220-4D3B-9CB4-DD3A5D877B02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogUrl.Demo", "Talifun.Web Examples\LogUrl.Demo\LogUrl.Demo.csproj", "{04C7820F-E87A-4E09-BBAB-CEF8F73152B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogUrl.Demo", "Talifun.Web.Examples\LogUrl.Demo\LogUrl.Demo.csproj", "{04C7820F-E87A-4E09-BBAB-CEF8F73152B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talifun.Web.UrlRewriter", "Talifun.Web.UrlRewriter\Talifun.Web.UrlRewriter.csproj", "{43D2AC34-0EEA-4A82-B907-80D4CBDD63A1}"
 EndProject
