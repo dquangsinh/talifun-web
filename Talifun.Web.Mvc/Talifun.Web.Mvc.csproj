@@ -56,7 +56,9 @@
     <Compile Include="ActionFilter\FlashCompatibleAuthorize\FlashCompatibleAuthorizeAttribute.cs" />
     <Compile Include="ActionFilter\ResourceNotFound\HandleResourceNotFoundAttribute.cs" />
     <Compile Include="ActionFilter\ResourceNotFound\ResourceNotFoundException.cs" />
+    <Compile Include="ActionResult\ContentDisposition\ContentDispositionActionResult.cs" />
     <Compile Include="ActionResult\StaticFile\StaticFileActionResult.cs" />
+    <Compile Include="HostMvc\MvcAppHost.cs" />
     <Compile Include="ModelBinder\EnumBinder\EnumBinder.cs" />
     <Compile Include="ModelBinder\EnumBinder\EnumHelper.cs" />
     <Compile Include="ModelMasterView\IMasterModelGenerator.cs" />
