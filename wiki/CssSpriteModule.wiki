@@ -1,0 +1,13 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+A module that compresses js into a single file, and css into a single file.
+
+It also watches for changes to any of the watched css or js files and regenerates the crushed file. It generates a unique hash for the crushed file and appends it to the css url and the js url. So you are always sure to be served the correct content, regardless of caching. 
+
+= When to use it =
+
+= Features =
+
+= Configuration =
