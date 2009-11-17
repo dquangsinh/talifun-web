@@ -1,0 +1,11 @@
+#summary A web module to compress web resources for web forms and mvc.
+
+= Introduction =
+
+A web module to compress web resources for web forms and mvc.
+
+= When to use it =
+
+= Features =
+
+= Configuration =
