@@ -1,5 +1,6 @@
 #summary An http handler that will serve static files in a cached, compressed and resumable manner.
 #labels Static,File,compress,cached,resumable,partial,206,304
+
 = Introduction =
 
 An http handler that will serve static files in a cached, compressed and resumable manner.
