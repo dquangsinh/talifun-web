@@ -1,0 +1,11 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+Makes it easy to hook into web requests filtered by regular expression. For example it makes it easy to log all requests for pdfs into a database or log4net.
+
+= When to use it =
+
+= Features =
+
+= Configuration =
