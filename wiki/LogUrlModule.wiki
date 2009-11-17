@@ -1,6 +1,8 @@
-#summary One-sentence summary of this page.
+#summary A module that makes it easy to hook into web requests that match a regular expression.
 
 = Introduction =
+
+A module that makes it easy to hook into web requests that match a regular expression.
 
 Makes it easy to hook into web requests filtered by regular expression. For example it makes it easy to log all requests for pdfs into a database or log4net.
 
