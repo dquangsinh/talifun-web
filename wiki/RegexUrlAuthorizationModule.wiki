@@ -1,0 +1,12 @@
+#summary A web module to provides authorization based on urls matching regular expressions.
+#labels authorization,module,asp.net,regularexpression
+
+= Introduction =
+
+A web module to provides authorization based on urls matching regular expressions.
+
+= When to use it =
+
+= Features =
+
+= Configuration =
