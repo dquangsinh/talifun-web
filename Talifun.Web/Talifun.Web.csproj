@@ -8,8 +8,8 @@
     <ProjectGuid>{FB8D10A5-40A2-44B0-A30F-1B316B5AFC34}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gp.Web</RootNamespace>
-    <AssemblyName>Gp.Web</AssemblyName>
+    <RootNamespace>Talifun.Web</RootNamespace>
+    <AssemblyName>Talifun.Web</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -107,6 +107,11 @@
     <Compile Include="Crusher\JsFile.cs" />
     <Compile Include="Crusher\CrusherManager.cs" />
     <Compile Include="Crusher\CrusherModule.cs" />
+    <Compile Include="RegexUrlAuthorization\Config\CurrentRegexUrlAuthorizationConfiguration.cs" />
+    <Compile Include="RegexUrlAuthorization\Config\RegexUrlAuthorizationSection.cs" />
+    <Compile Include="RegexUrlAuthorization\Config\UrlMatchElement.cs" />
+    <Compile Include="RegexUrlAuthorization\Config\UrlMatchElementCollection.cs" />
+    <Compile Include="RegexUrlAuthorization\RegexUrlAuthorizationModule.cs" />
     <Compile Include="StaticFile\Config\CurrentStaticFileHandlerConfiguration.cs" />
     <Compile Include="StaticFile\Config\FileExtensionDefaultElement.cs" />
     <Compile Include="StaticFile\Config\FileExtensionElementCollection.cs" />

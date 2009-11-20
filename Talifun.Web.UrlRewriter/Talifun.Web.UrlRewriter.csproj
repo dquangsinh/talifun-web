@@ -8,8 +8,8 @@
     <ProjectGuid>{43D2AC34-0EEA-4A82-B907-80D4CBDD63A1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gp.Web.UrlRewriter</RootNamespace>
-    <AssemblyName>Gp.Web.UrlRewriter</AssemblyName>
+    <RootNamespace>Talifun.Web.UrlRewriter</RootNamespace>
+    <AssemblyName>Talifun.Web.UrlRewriter</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
