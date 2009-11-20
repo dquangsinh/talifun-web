@@ -32,6 +32,6 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
   * Resumable downloads (206 partial)
   * Client side caching (304 not modified): ETags, expires
   * Compression: none, gzip, deflate
-  * Cached: stores orginal and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial conent can be servered from memory too.
+  * Server side caching: stores original and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial content can be served from memory too.
 
 = Configuration =
