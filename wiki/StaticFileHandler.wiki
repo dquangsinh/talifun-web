@@ -37,7 +37,7 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 = Configuration =
 
 {{{
-	<configuration>
+<configuration>
 	<configSections>
 		<section name="StaticFileHandler" type="Talifun.Web.StaticFile.Config.StaticFileHandlerSection, Talifun.Web" requirePermission="false" allowDefinition="MachineToApplication"/>
 	</configSections>
