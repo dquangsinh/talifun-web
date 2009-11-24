@@ -35,3 +35,25 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
   * Server side caching: stores original and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial content can be served from memory too.
 
 = Configuration =
+
+{{{
+	<GpHandler>
+		<!-- The defaults to use when an extension is found that does not have a specific rule  -->
+		<fileExtensionDefault name="Default" serveFromMemory="true" maxMemorySize="100000" compress="true"/>
+		<!-- Specific rules for extension types -->
+		<fileExtensions>
+			<fileExtension name="CommonStaticContent" extension="css, js, htm, html, swf, xml, xslt, txt" serveFromMemory="true" maxMemorySize="5000000" compress="true"/>
+			<fileExtension name="OfficeDocumentStaticContent" extension="doc, xls, ppt" serveFromMemory="true" maxMemorySize="100000" compress="true"/>
+			<!-- Dont compress pdfs as they are already compressed and sending compressed pdf is know to cause problems -->
+			<fileExtension name="PdfDocumentStaticContent" extension="pdf" serveFromMemory="true" maxMemorySize="100000" compress="false"/>			
+			<!-- Dont compress images as they are already compressed -->
+			<fileExtension name="ImagesStaticContent" extension="png, jpg, jpeg, gif, ico" serveFromMemory="true" maxMemorySize="500000" compress="false"/>
+			<!-- Dont compress audio as they are already compressed -->
+			<fileExtension name="AudioStaticContent" extension="wav, mp3, m4a, aac" serveFromMemory="true" maxMemorySize="100000" compress="false"/>
+			<!-- Dont compress videos as they are already compressed -->
+			<fileExtension name="VideoStaticContent" extension="3gp, 3g2, asf, avi, dv, flv, mov, mp4, mpg, mpeg, wmv" serveFromMemory="true" maxMemorySize="100000" compress="false"/>
+			<!-- Dont compress compressed content -->
+			<fileExtension name="CompressedStaticContent" extension="zip, rar, 7z, arj" serveFromMemory="true" maxMemorySize="100000" compress="false"/>
+		</fileExtensions>
+	</GpHandler>
+}}}
