@@ -10,7 +10,7 @@
 <body>
     <form id="form1" runat="server">
     <div>
-        Demonstration will only work with web server that you can modify the headers on.
+        Resumable downloads will only work with web server that you can modify the headers on.
         So it will work on IIS but not on Cassini.
     
         <img src="/doesnotexist1.jpg" width="100px" height="100px" />

@@ -66,11 +66,17 @@ namespace Talifun.Web.StaticFile.Config
         }
 
         /// <summary>
-        /// Gets or sets all the extensions of files that should be stored in memory regardless of their size.
+        /// Gets or sets if the content served is compressible
         /// </summary>
         /// <remarks>
-        /// The default types that are not limited in size for being served from memory are:
-        /// css,js,swf
+        /// The default types that should be compressed are:
+        /// css, js, htm, html, swf, xml, xslt, txt
+        /// The default types that should not be compressed are:
+        /// pdf, 
+        /// png, jpg, jpeg, gif, ico,
+        /// wav, mp3, m4a, aac,
+        /// 3gp, 3g2, asf, avi, dv, flv, mov, mp4, mpg, mpeg, wmv,
+        /// zip, rar, 7z, arj
         /// </remarks>
         [ConfigurationProperty("compress", IsRequired = false, DefaultValue = true)]
         public bool Compress
