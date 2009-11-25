@@ -7,20 +7,6 @@ An http handler that will serve static files in a cached, compressed and resumab
 
 It generates consistent etags and the correct meta tags for caching on proxies and locally. This is especially useful when you don't have control over the configuration of the webserver.
 
-It supports the following caching http header tags:
-
-  * Accept-Ranges
-  * ETag
-  * Expires
-  * Last-Modified
-  * Range
-  * If-Range
-  * If-Match
-  * If-None-Match
-  * If-Modified-Since
-  * If-Unmodified-Since
-  * Unless-Modified-Since
-
 It can also serve cached requests and compressed cached requests from memory bypassing the hard drive. 
 
 = When to use it =
@@ -29,16 +15,51 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 
 = Features =
 
-  * Resumable downloads (206 partial)
-  * Client side caching (304 not modified): ETags, expires
-  * Compression: none, gzip, deflate
-  * Server side caching: stores original and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial content can be served from memory too.
+==Resumable downloads==
+Partial requests are processed, and result in a *206 partial* response. IIS 7 is required for this to work, as IIS 6 does not support arbitrary http headers being set.
+
+This is very useful when sending large files or streaming media files, as only the requested bytes are served.
+
+==Server side caching==
+The handler stores original and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial content can be served from memory too.
+
+==Client side caching==
+*ETag* and *Expires* http headers are sent by handler. Matched cached requests result in a *304 Not Modified* response. 
+
+It supports the following caching http header tags:
+  * ETag
+  * Expires
+  * Last-Modified
+  * If-Range
+  * If-Match
+  * If-None-Match
+  * If-Modified-Since
+  * If-Unmodified-Since
+  * Unless-Modified-Since
+
+==Compression==
+Gzip and deflate compression is supported. Deflate is probably the optimal compression type to use:
+
+http://madskristensen.net/post/Compression-and-performance-GZip-vs-Deflate.aspx
+
+These file types will benefit from further compression:
+  * css, js, htm, html, swf, xml, xslt, txt
+  * doc, xls, ppt
+
+There are some file types that will not benefit from further compression:
+  * pdf (causes problems with certain versions in IE)
+  * png, jpg, jpeg, gif, ico
+  * wav, mp3, m4a, aac  (wav is often compressed)
+  * 3gp, 3g2, asf, avi, dv, flv, mov, mp4, mpg, mpeg, wmv
+  * zip, rar, 7z, arj
+
+
 
 = Configuration =
 
 *EtagMethodType*
-  * *MD5* - The MD5 hash of the file's contents
-  * *LastModified* - The date time the file was last accessed
+  * *MD5* - The etag must be a MD5 hash of the file's contents
+  * *LastModified* - The etag must be the date time the file was last accessed
 
 *FileExtensionDefaultElement*
   * _string_ *Name* - the unique name of the configuration element
