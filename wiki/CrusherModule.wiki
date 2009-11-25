@@ -58,9 +58,22 @@ Example Configuration:
 		</jsGroups>
 	</Crusher>	
 	<system.web>
+		<pages>
+			<controls>
+				<add tagPrefix="talifun" namespace="Talifun.Web.Crusher" assembly="Talifun.Web"/>
+			</controls>
+		</pages>	
 		<httpModules>
 			<add name="CrusherModule" type="Talifun.Web.Crusher.CrusherModule, Talifun.Web"/>
 		</httpModules>
 	</system.web>		
 </configuration>
+}}}
+
+Example usage in page:
+{{{
+<head>
+    <talifun:CssControl ID="SiteCssControl" runat="server" GroupName="SiteCss" />
+    <talifun:JsControl ID="SiteJsControl" runat="server" GroupName="SiteJs" />
+</head>
 }}}
