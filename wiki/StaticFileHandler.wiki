@@ -37,27 +37,27 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 = Configuration =
 
 *EtagMethodType*
-  * MD5 - The MD5 hash of the file's contents
-  * LastModified - The date time the file was last accessed
+  * *MD5* - The MD5 hash of the file's contents
+  * *LastModified* - The date time the file was last accessed
 
 *FileExtensionDefaultElement*
-  * string Name - the unique name of the configuration element
-  * bool ServeFromMemory - should content be served from memory
-  * long MaxMemorySize - the maximum size a file can be before it is no longer served from memory
-  * bool Compress - is the content compressible
-  * TimeSpan MemorySlidingExpiration - The amount of time a file should be cached in memory
-  * TimeSpan Expires - the amount of time a browser request is valid for. This should be set to a value like 1 week.
-  * EtagMethodType EtagMethod - the type of method used to calculate the etag. 
+  * _string_ *Name* - the unique name of the configuration element
+  * _bool_ *ServeFromMemory* - should content be served from memory
+  * _long_ *MaxMemorySize* - the maximum size a file can be before it is no longer served from memory
+  * _bool_ *Compress* - is the content compressible
+  * _TimeSpan_ *MemorySlidingExpiration* - The amount of time a file should be cached in memory
+  * _TimeSpan_ *Expires* - the amount of time a browser request is valid for. This should be set to a value like 1 week.
+  * _EtagMethodType_ *EtagMethod* - the type of method used to calculate the etag. 
 
 *FileExtensionElement*
-  * string Name - the unique name of the configuration element
-  * string Extension - a comma separated list of extensions this rule must apply too
-  * bool ServeFromMemory - should content be served from memory
-  * long MaxMemorySize - the maximum size a file can be before it is no longer served from memory
-  * bool Compress - is the content compressible
-  * TimeSpan MemorySlidingExpiration - The amount of time a file should be cached in memory
-  * TimeSpan Expires - the amount of time a browser request is valid for. This should be set to a value like 1 week.
-  * EtagMethodType EtagMethod - the type of method used to calculate the etag. 
+  * _string_ *Name* - the unique name of the configuration element
+  * _string_ *Extension* - a comma separated list of extensions this rule must apply too
+  * _bool_ *ServeFromMemory* - should content be served from memory
+  * _long_ *MaxMemorySize* - the maximum size a file can be before it is no longer served from memory
+  * _bool_ *Compress* - is the content compressible
+  * _TimeSpan_ *MemorySlidingExpiration* - The amount of time a file should be cached in memory
+  * _TimeSpan_ *Expires* - the amount of time a browser request is valid for. This should be set to a value like 1 week.
+  * _EtagMethodType_ *EtagMethod* - the type of method used to calculate the etag. 
 
 
 Example Configuration:
