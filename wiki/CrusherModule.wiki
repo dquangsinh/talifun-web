@@ -34,9 +34,9 @@ When you want to minimize the number of http requests and the size of js and css
 
 *CssCompressionType*
   * *None* - Do not use any compression at all on css file
-  * *StockYuiCompressor*
-  * *MichaelAshRegexEnhancements*
-  * *Hybrid*
+  * *StockYuiCompressor* - http://yuicompressor.codeplex.com/
+  * *MichaelAshRegexEnhancements* - http://yuicompressor.codeplex.com/
+  * *Hybrid* - http://yuicompressor.codeplex.com/
 
 *CssGroupElement*
   * _string_ *Name* - the unique name of the configuration element
