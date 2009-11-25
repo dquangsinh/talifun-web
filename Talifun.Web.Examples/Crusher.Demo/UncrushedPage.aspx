@@ -7,10 +7,10 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/jquery-ui-1.7.1.css")%>" media="screen" /> 
     <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/default.css")%>" media="screen" />
-    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/bacteria.css")%>" media="screen" />
-    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/brine.css")%>" media="screen" />
-    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/taste.css")%>" media="screen" />
-    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/worm.css")%>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/test1.css")%>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/test2.css")%>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/test3.css")%>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<%=this.ResolveUrl("~/Static/Css/test4.css")%>" media="screen" />
     <script language="javascript" type="text/javascript" src="<%=this.ResolveUrl("~/Static/Js/jquery-1.3.2.min.js")%>"></script>
     <script language="javascript" type="text/javascript" src="<%=this.ResolveUrl("~/Static/Js/jquery-ui-1.7.1.min.js")%>"></script>
     <script language="javascript" type="text/javascript" src="<%=this.ResolveUrl("~/Static/Js/jquery.flash.min.js")%>"></script>

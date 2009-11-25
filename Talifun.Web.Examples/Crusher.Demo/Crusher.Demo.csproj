@@ -56,8 +56,8 @@
     <Content Include="CrushedPage.aspx" />
     <Content Include="DebugCrushedPage.aspx" />
     <Content Include="Default.aspx" />
-    <Content Include="Static\Css\bacteria.css" />
-    <Content Include="Static\Css\brine.css" />
+    <Content Include="Static\Css\test1.css" />
+    <Content Include="Static\Css\test2.css" />
     <Content Include="Static\Css\default.css" />
     <Content Include="Static\Css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Static\Css\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -73,8 +73,8 @@
     <Content Include="Static\Css\images\ui-icons_888888_256x240.png" />
     <Content Include="Static\Css\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Static\Css\jquery-ui-1.7.1.css" />
-    <Content Include="Static\Css\taste.css" />
-    <Content Include="Static\Css\worm.css" />
+    <Content Include="Static\Css\test3.css" />
+    <Content Include="Static\Css\test4.css" />
     <Content Include="Static\Js\additional-validation-methods.min.js" />
     <Content Include="Static\Js\jquery-1.3.2.min.js" />
     <Content Include="Static\Js\jquery-ui-1.7.1.min.js" />
