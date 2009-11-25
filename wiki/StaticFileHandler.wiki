@@ -36,16 +36,29 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 
 = Configuration =
 
-FileExtensionDefaultElement
-  * string Name - the name of the configuration element
+*EtagMethodType*
+  * MD5 - The MD5 hash of the file's contents
+  * LastModified - The date time the file was last accessed
+
+*FileExtensionDefaultElement*
+  * string Name - the unique name of the configuration element
   * bool ServeFromMemory - should content be served from memory
   * long MaxMemorySize - the maximum size a file can be before it is no longer served from memory
   * bool Compress - is the content compressible
   * TimeSpan MemorySlidingExpiration - The amount of time a file should be cached in memory
   * TimeSpan Expires - the amount of time a browser request is valid for. This should be set to a value like 1 week.
-  * EtagMethodType EtagMethod - the type of method used to calculate the etag. EtagMethodType:
-    * MD5 - The MD5 hash of the file's contents
-    * LastModified - The date time the file was last accessed
+  * EtagMethodType EtagMethod - the type of method used to calculate the etag. 
+
+*FileExtensionElement*
+  * string Name - the unique name of the configuration element
+  * string Extension - a comma separated list of extensions this rule must apply too
+  * bool ServeFromMemory - should content be served from memory
+  * long MaxMemorySize - the maximum size a file can be before it is no longer served from memory
+  * bool Compress - is the content compressible
+  * TimeSpan MemorySlidingExpiration - The amount of time a file should be cached in memory
+  * TimeSpan Expires - the amount of time a browser request is valid for. This should be set to a value like 1 week.
+  * EtagMethodType EtagMethod - the type of method used to calculate the etag. 
+
 
 Example Configuration:
 {{{
