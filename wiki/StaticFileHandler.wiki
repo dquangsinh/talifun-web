@@ -20,6 +20,11 @@ Partial requests are processed, and result in a *206 partial* response. IIS 7 is
 
 This is very useful when sending large files or streaming media files, as only the requested bytes are served.
 
+It supports the following partial http header tags:
+  * Accept-Ranges
+  * Range
+  * If-Range
+
 ==Server side caching==
 The handler stores original and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial content can be served from memory too.
 
@@ -30,7 +35,6 @@ It supports the following caching http header tags:
   * ETag
   * Expires
   * Last-Modified
-  * If-Range
   * If-Match
   * If-None-Match
   * If-Modified-Since
@@ -52,8 +56,6 @@ There are some file types that will not benefit from further compression:
   * wav, mp3, m4a, aac  (wav is often compressed)
   * 3gp, 3g2, asf, avi, dv, flv, mov, mp4, mpg, mpeg, wmv
   * zip, rar, 7z, arj
-
-
 
 = Configuration =
 
