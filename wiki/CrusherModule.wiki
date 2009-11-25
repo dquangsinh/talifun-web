@@ -22,6 +22,35 @@ When you want to minimize the number of http requests and the size of js and css
 
 = Configuration =
 
+*JsCompressionType*
+  * *None* - Do not use any compression at all on js file
+  * *Min* - Use jsmin to compress the js file
+
+*JsGroupElement*
+  * _string_ *Name* - the unique name of the configuration element
+  * _string_ *OutputFilePath* - the file path for the output js file 
+  * _string_ *Url* - the url for output js file
+  * _bool_ *Debug* - should the uncrushed versions of the js files be used
+
+*CssCompressionType*
+  * *None* - Do not use any compression at all on css file
+  * *StockYuiCompressor*
+  * *MichaelAshRegexEnhancements*
+  * *Hybrid*
+
+*CssGroupElement*
+  * _string_ *Name* - the unique name of the configuration element
+  * _string_ *OutputFilePath* - the file path for the output css file
+  * _string_ *Url* - the url for output css file
+  * _string_ *Media* - the url for output css file
+  * _bool_ *Debug* - should the uncrushed versions of the css files be used
+
+*CssFileElement*
+  * _string_ *Name* - the unique name of the configuration element
+  * _string_ *FilePath* - the file path for the css file
+  * _CssCompressionType_ *CompressionType* - the compression type to use for the css file
+
+
 Example Configuration:
 {{{
 <configuration>
