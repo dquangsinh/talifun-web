@@ -80,11 +80,17 @@ namespace Talifun.Web.StaticFile.Config
         }
 
         /// <summary>
-        /// Gets or sets if the file type should be compresse3d.
+        /// Gets or sets if the content served is compressible
         /// </summary>
         /// <remarks>
-        /// Don't try to compress file types that don't benefit from compress e.g.
-        ///  jpg, gif, png, zip, avi, mp3 etc
+        /// The default types that should be compressed are:
+        /// css, js, htm, html, swf, xml, xslt, txt
+        /// The default types that should not be compressed are:
+        /// pdf, 
+        /// png, jpg, jpeg, gif, ico,
+        /// wav, mp3, m4a, aac,
+        /// 3gp, 3g2, asf, avi, dv, flv, mov, mp4, mpg, mpeg, wmv,
+        /// zip, rar, 7z, arj
         /// </remarks>
         [ConfigurationProperty("compress", IsRequired = false, DefaultValue = 50000L)]
         public bool Compress

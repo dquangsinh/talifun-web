@@ -5,8 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
     <title></title>
-    <gp:CssControl ID="UrlSiteCssControl" runat="server" GroupName="UrlSiteCss" />
-    <gp:JsControl ID="UrlSiteJsControl" runat="server" GroupName="UrlSiteJs" />      
+    <talifun:CssControl ID="UrlSiteCssControl" runat="server" GroupName="UrlSiteCss" />
+    <talifun:JsControl ID="UrlSiteJsControl" runat="server" GroupName="UrlSiteJs" />      
 </head>
 <body>
     <form id="form1" runat="server">
