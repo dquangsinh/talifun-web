@@ -13,3 +13,28 @@ When you want to do something when a certain url is requested. For instance it m
 Exposes a matching url with an event.
 
 = Configuration =
+
+*UrlMatchElement*
+  * _string_ *Name* - the unique name of the configuration element
+  * _string_ *Expression* - the regular expression, the incoming request must match, for authorization to be applied against it.
+
+Example Configuration:
+{{{
+<configuration>
+	<configSections>
+		<section name="logMatches" type="Talifun.Web.LogUrl.Config.LogUrlSection, Talifun.Web" requirePermission="false" allowDefinition="MachineToApplication"/>
+	</configSections>
+	<logMatches>
+		<urlMatches>
+			<!--This will match file extensions. Don't forget that their might be a querystring or a bookmark on the end-->
+			<urlMatch name="Pdf" expression=".+\.(pdf)([\?|\#].*)?$" />
+			<urlMatch name="Office" expression=".+\.(doc|xls|ppt)([\?|\#].*)?$" />
+		</urlMatches>
+	</logMatches>
+	<system.web>
+		<httpModules>
+			<add name="LogModule" type="Talifun.Web.LogUrl.LogUrlModule, Talifun.Web"/>
+		</httpModules>
+	</system.web>
+</configuration>
+}}}
