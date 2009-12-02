@@ -1,13 +1,15 @@
-#summary A module that makes it easy to hook into web requests that match a regular expression.
+#summary A very simple module that makes it easy to hook into web requests that match a regular expression.
 
 = Introduction =
 
 A module that makes it easy to hook into web requests that match a regular expression.
 
-Makes it easy to hook into web requests filtered by regular expression. For example it makes it easy to log all requests for pdfs into a database or log4net.
-
 = When to use it =
 
+When you want to do something when a certain url is requested. For instance it makes it easy to log all requests for pdfs using log4net.
+
 = Features =
+
+Exposes a matching url with an event.
 
 = Configuration =
