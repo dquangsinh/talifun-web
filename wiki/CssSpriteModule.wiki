@@ -1,13 +1,17 @@
-#summary A module that compresses js and css files into single files.
+#summary A module that combines component images into a single sprite image file and generates the css sprite file required to cut the sprite image into its component images.
 
 = Introduction =
 
-A module that compresses js and css files into single files.
-
-It also watches for changes to any of the watched css or js files and regenerates the crushed file. It generates a unique hash for the crushed file and appends it to the css url and the js url. So you are always sure to be served the correct content, regardless of caching. 
+A module that compresses component images into a single sprite image file and generates the css required to cut the sprite image into its component images.
 
 = When to use it =
 
+When you want to combine images to reduce load times. Images should ideally be very similar in size. So combining all menu navigation icons is a ideally suited for this. Reducing the number of http request speeds up page load times.
+
 = Features =
+
+It adds a 2 pixel gap between component images as some browser don't handle css properly.
+
+It watches for changes to any of the component images and regenerates the sprite image file and the css sprite file. 
 
 = Configuration =
