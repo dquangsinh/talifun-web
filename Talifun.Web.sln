@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talifun.Web.Mvc", "Talifun.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RegexUrlAuthorization", "RegexUrlAuthorization", "{553BC3FD-3C37-4A0C-871A-2948B45BEDD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegexUrlAuthorization.Demo", "RegexUrlAuthorization.Demo\RegexUrlAuthorization.Demo.csproj", "{C1C1A286-780B-44AD-8FB0-AE78528B68EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegexUrlAuthorization.Demo", "Talifun.Web.Examples\RegexUrlAuthorization.Demo\RegexUrlAuthorization.Demo.csproj", "{C1C1A286-780B-44AD-8FB0-AE78528B68EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
