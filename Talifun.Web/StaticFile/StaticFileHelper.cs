@@ -163,7 +163,10 @@ namespace Talifun.Web.StaticFile
                 }
 
                 var etag = string.Empty;
-                var lastModified = file.LastWriteTime.ToUniversalTime();
+                var lastModifiedFileTime = file.LastWriteTime.ToUniversalTime();
+                //When a browser sets the If-Modified-Since field to 13-1-2010 10:30:58, another DateTime instance is created, but this one has a Ticks value of 633989754580000000
+                //But the time from the file system is accurate to a tick. So it might be 633989754586086250.
+                var lastModified = new DateTime(lastModifiedFileTime.Year, lastModifiedFileTime.Month, lastModifiedFileTime.Day, lastModifiedFileTime.Hour, lastModifiedFileTime.Minute, lastModifiedFileTime.Second);
                 var contentType = MimeHelper.GetMimeType(file.Extension);
                 var contentLength = file.Length;
 
