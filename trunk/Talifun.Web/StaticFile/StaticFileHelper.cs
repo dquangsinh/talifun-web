@@ -857,11 +857,18 @@ namespace Talifun.Web.StaticFile
             {
                 //If there no matches then we do not want a cached response
                 ifNoneMatch = CheckIfNoneMatch(request, etag);
-                if (ifNoneMatch.HasValue && !ifNoneMatch.Value)
+                if (ifNoneMatch.HasValue)
                 {
-                    //If the request would, without the If-None-Match header field, result in 
-                    //anything other than a 2xx or 304 status, then the If-None-Match header MUST be ignored.
-                    responseCode = (int) HttpStatusCode.NotModified;
+                    if (ifNoneMatch.Value && responseCode == 304)
+                    {
+                        responseCode = (int)HttpStatusCode.OK;
+                    }
+                    else
+                    {
+                        //If the request would, without the If-None-Match header field, result in 
+                        //anything other than a 2xx or 304 status, then the If-None-Match header MUST be ignored.
+                        responseCode = (int) HttpStatusCode.NotModified;
+                    }
                 }
             }
 
@@ -880,9 +887,11 @@ namespace Talifun.Web.StaticFile
                 }
             }
 
-            if ((ifNoneMatch.HasValue && !ifNoneMatch.Value) || (ifMatch.HasValue && ifMatch.Value))
+            if (
+                !(ifNoneMatch.HasValue && ifNoneMatch.Value) ||
+                !(ifMatch.HasValue && !ifMatch.Value))
             {
-                //Only use weakly typed etags headers if strong ones are not specified
+                //Only use weakly typed etags headers if strong ones are valid
 
                 if (((responseCode >= 200 && responseCode <= 299 || responseCode == 304)))
                 {
@@ -919,9 +928,17 @@ namespace Talifun.Web.StaticFile
                 if (((responseCode >= 200 && responseCode <= 299 || responseCode == 304)))
                 {
                     ifModifiedSince = CheckIfModifiedSince(request, lastModified);
-                    if (ifModifiedSince.HasValue && !ifModifiedSince.Value)
+                    if (ifModifiedSince.HasValue)
                     {
-                        responseCode = (int) HttpStatusCode.NotModified;
+                        if (ifModifiedSince.Value && responseCode == 304)
+                        {
+                            //ifNoneMatch must be ignored if ifModifiedSince does not match so return entire entity
+                            responseCode = (int)HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            responseCode = (int)HttpStatusCode.NotModified;    
+                        }
                     }
                 }
             }
