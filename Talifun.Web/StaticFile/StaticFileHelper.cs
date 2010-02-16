@@ -846,68 +846,26 @@ namespace Talifun.Web.StaticFile
                 return false;
             }
 
-            bool? ifModifiedSince = null;
-            ifModifiedSince = CheckIfModifiedSince(request, lastModified);
-            if (ifModifiedSince.HasValue)
-            {
-                if (ifModifiedSince.Value)
-                {
-                    SendOKResponseHeaders(response);
-                    return false;
-                }
-
-                responseCode = (int)HttpStatusCode.NotModified;
-            }
-
             bool? ifNoneMatch = null;
-            if (((responseCode >= 200 && responseCode <= 299)))
+            bool? ifMatch = null;
+
+            bool? unlessModifiedSince = null;
+            bool? ifUnmodifiedSince = null;
+            bool? ifModifiedSince = null;
+
+            if (((responseCode >= 200 && responseCode <= 299 || responseCode == 304)))
             {
                 //If there no matches then we do not want a cached response
                 ifNoneMatch = CheckIfNoneMatch(request, etag);
-                if (ifNoneMatch.HasValue && ifNoneMatch.Value)
+                if (ifNoneMatch.HasValue && !ifNoneMatch.Value)
                 {
                     //If the request would, without the If-None-Match header field, result in 
                     //anything other than a 2xx or 304 status, then the If-None-Match header MUST be ignored.
-                    responseCode = (int)HttpStatusCode.NotModified;
+                    responseCode = (int) HttpStatusCode.NotModified;
                 }
             }
 
-            bool? ifUnmodifiedSince = null;
-            if (((responseCode >= 200 && responseCode <= 299)))
-            {
-                ifUnmodifiedSince = CheckIfUnmodifiedSince(request, lastModified);
-                if (ifUnmodifiedSince.HasValue && !ifUnmodifiedSince.Value)
-                {
-                    //If the requested variant has been modified since the specified time, 
-                    //the server MUST NOT perform the requested operation, and MUST return 
-                    //a 412 (Precondition Failed). Otherwise header is ignored. 
-
-                    //If the request normally (i.e., without the If-Unmodified-Since header) 
-                    //would result in anything other than a 2xx or 412 status, 
-                    //the If-Unmodified-Since header SHOULD be ignored.
-                    responseCode = (int)HttpStatusCode.PreconditionFailed;
-                }
-            }
-
-            bool? unlessModifiedSince = null;
-            if (((responseCode >= 200 && responseCode <= 299)))
-            {
-                unlessModifiedSince = CheckUnlessModifiedSince(request, lastModified);
-                if (unlessModifiedSince.HasValue && !unlessModifiedSince.Value)
-                {
-                    //If the requested variant has been modified since the specified time, 
-                    //the server MUST NOT perform the requested operation, and MUST return 
-                    //a 412 (Precondition Failed). Otherwise header is ignored.
-
-                    //If the request normally (i.e., without the If-Unmodified-Since header) 
-                    //would result in anything other than a 2xx or 412 status, 
-                    //the If-Unmodified-Since header SHOULD be ignored.
-                    responseCode = (int)HttpStatusCode.PreconditionFailed;
-                }
-            }
-
-            bool? ifMatch = null;
-            if (((responseCode >= 200 && responseCode <= 299)))
+            if (((responseCode >= 200 && responseCode <= 299 || responseCode == 304)))
             {
                 ifMatch = CheckIfMatch(request, etag);
                 if (ifMatch.HasValue && !ifMatch.Value)
@@ -922,39 +880,67 @@ namespace Talifun.Web.StaticFile
                 }
             }
 
-            if (responseCode == (int)HttpStatusCode.NotModified)
+            if ((ifNoneMatch.HasValue && !ifNoneMatch.Value) || (ifMatch.HasValue && ifMatch.Value))
             {
-                SendNotModifiedResponseHeaders(response);
-                return true;
+                //Only use weakly typed etags headers if strong ones are not specified
+
+                if (((responseCode >= 200 && responseCode <= 299 || responseCode == 304)))
+                {
+                    unlessModifiedSince = CheckUnlessModifiedSince(request, lastModified);
+                    if (unlessModifiedSince.HasValue && !unlessModifiedSince.Value)
+                    {
+                        //If the requested variant has been modified since the specified time, 
+                        //the server MUST NOT perform the requested operation, and MUST return 
+                        //a 412 (Precondition Failed). Otherwise header is ignored.
+
+                        //If the request normally (i.e., without the If-Unmodified-Since header) 
+                        //would result in anything other than a 2xx or 412 status, 
+                        //the If-Unmodified-Since header SHOULD be ignored.
+                        responseCode = (int) HttpStatusCode.PreconditionFailed;
+                    }
+                }
+
+                if (((responseCode >= 200 && responseCode <= 299 || responseCode == 304)))
+                {
+                    ifUnmodifiedSince = CheckIfUnmodifiedSince(request, lastModified);
+                    if (ifUnmodifiedSince.HasValue && !ifUnmodifiedSince.Value)
+                    {
+                        //If the requested variant has been modified since the specified time, 
+                        //the server MUST NOT perform the requested operation, and MUST return 
+                        //a 412 (Precondition Failed). Otherwise header is ignored. 
+
+                        //If the request normally (i.e., without the If-Unmodified-Since header) 
+                        //would result in anything other than a 2xx or 412 status, 
+                        //the If-Unmodified-Since header SHOULD be ignored.
+                        responseCode = (int) HttpStatusCode.PreconditionFailed;
+                    }
+                }
+
+                if (((responseCode >= 200 && responseCode <= 299 || responseCode == 304)))
+                {
+                    ifModifiedSince = CheckIfModifiedSince(request, lastModified);
+                    if (ifModifiedSince.HasValue && !ifModifiedSince.Value)
+                    {
+                        responseCode = (int) HttpStatusCode.NotModified;
+                    }
+                }
             }
 
-            if (responseCode == (int)HttpStatusCode.PreconditionFailed)
+            switch (responseCode)
             {
-                SendPreconditionFailedResponseHeaders(response);
-                return true;
+                case (int) HttpStatusCode.NotModified:
+                    SendNotModifiedResponseHeaders(response);
+                    return true;
+                case (int) HttpStatusCode.PreconditionFailed:
+                    SendPreconditionFailedResponseHeaders(response);
+                    return true;
+                case (int) HttpStatusCode.PartialContent:
+                    SendPartialContentResponseHeaders(response);
+                    return false;
+                default:
+                    SendOKResponseHeaders(response);
+                    return false;
             }
-
-            //we want to send a cached reponse if we matched any of the cached reponse headers
-            if (ifModifiedSince.HasValue
-                || ifModifiedSince.HasValue
-                || ifNoneMatch.HasValue
-                || ifUnmodifiedSince.HasValue
-                || unlessModifiedSince.HasValue
-                || ifMatch.HasValue
-                )
-            {
-                SendNotModifiedResponseHeaders(response);
-                return true;
-            }
-
-            if (responseCode == (int)HttpStatusCode.PartialContent)
-            {
-                SendPartialContentResponseHeaders(response);
-                return false;
-            }
-
-            SendOKResponseHeaders(response);
-            return false;
         }
 
         #endregion
