@@ -1,5 +1,5 @@
 ﻿using System;
-using UrlReWriter.Example.CustomUrlRewriter;
+using UrlReWriter.Demo.CustomUrlRewriter;
 
 namespace UrlRewriter.Demo
 {
