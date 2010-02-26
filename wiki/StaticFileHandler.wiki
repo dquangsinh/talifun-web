@@ -48,7 +48,7 @@ http://madskristensen.net/post/Compression-and-performance-GZip-vs-Deflate.aspx
 
 These file types will benefit from further compression:
   * css, js, htm, html, swf, xml, xslt, txt
-  * doc, xls, ppt
+  * doc, xls, ppt, docx, xlsx, pptx
 
 There are some file types that will not benefit from further compression:
   * pdf (causes problems with certain versions in IE)
