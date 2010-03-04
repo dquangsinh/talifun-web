@@ -9,13 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talifun.Web", "Talifun.Web\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Talifun.Web Examples", "Talifun.Web Examples", "{BBD8CE05-D20C-4F98-B1BF-1F48378FA1C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlRewriter.Demo", "Talifun.Web.Examples\UrlRewriter.Demo\UrlRewriter.Demo.csproj", "{EB258590-626C-4F1D-ABEE-E863551BB5EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlRewriter.Demo", "Talfun.Web.UrlRewriter.Examples\UrlRewriter.Demo\UrlRewriter.Demo.csproj", "{EB258590-626C-4F1D-ABEE-E863551BB5EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LogUrl", "LogUrl", "{6585BAE3-7D86-4204-B2BF-F70F5CAE84F2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UrlReWriter", "UrlReWriter", "{5486B4C8-67EA-46B7-BFAE-3C812AF2CEDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlReWriter.Demo.CustomUrlRewriter", "Talifun.Web.Examples\UrlReWriter.Demo.CustomUrlRewriter\UrlReWriter.Demo.CustomUrlRewriter.csproj", "{3E797996-D4C7-45D1-8B5F-B3C87FC4F886}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlReWriter.Demo.CustomUrlRewriter", "Talfun.Web.UrlRewriter.Examples\UrlReWriter.Demo.CustomUrlRewriter\UrlReWriter.Demo.CustomUrlRewriter.csproj", "{3E797996-D4C7-45D1-8B5F-B3C87FC4F886}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crusher.Demo", "Talifun.Web.Examples\Crusher.Demo\Crusher.Demo.csproj", "{0F576746-2042-433F-8543-FCB9321FDEF0}"
 EndProject
