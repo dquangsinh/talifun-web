@@ -16,7 +16,7 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 = Features =
 
 ==Resumable downloads==
-Partial requests are processed, and result in a *206 partial* response. IIS 7 is required for this to work, as IIS 6 does not support arbitrary http headers being set.
+Partial requests are processed, and result in a *206 partial* response. *IIS 7 is required for this to work, as IIS 6 does not support arbitrary http headers being set*.
 
 This is very useful when sending large files or streaming media files, as only the requested bytes are served.
 
