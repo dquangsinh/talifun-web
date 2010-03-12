@@ -1,10 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcmaScript.NET", "EcmaScript.NET\EcmaScript.NET.csproj", "{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor", "Yahoo.Yui.Compressor\Yahoo.Yui.Compressor.csproj", "{7A85988C-2836-4BD6-9143-17C606B218D9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talifun.Web", "Talifun.Web\Talifun.Web.csproj", "{FB8D10A5-40A2-44B0-A30F-1B316B5AFC34}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Talifun.Web Examples", "Talifun.Web Examples", "{BBD8CE05-D20C-4F98-B1BF-1F48378FA1C2}"
@@ -55,14 +51,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A85988C-2836-4BD6-9143-17C606B218D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A85988C-2836-4BD6-9143-17C606B218D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A85988C-2836-4BD6-9143-17C606B218D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A85988C-2836-4BD6-9143-17C606B218D9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB8D10A5-40A2-44B0-A30F-1B316B5AFC34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB8D10A5-40A2-44B0-A30F-1B316B5AFC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB8D10A5-40A2-44B0-A30F-1B316B5AFC34}.Release|Any CPU.ActiveCfg = Release|Any CPU

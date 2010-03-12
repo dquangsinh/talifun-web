@@ -46,6 +46,10 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Yahoo.Yui.Compressor, Version=1.4.1.0, Culture=neutral, PublicKeyToken=f8b4b81ec75097e2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Talifun.Web.References\Yahoo.Yui.Compressor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compress\CompressionModuleHelper.cs" />
@@ -128,16 +132,6 @@
     <Compile Include="StaticFile\RangeItem.cs" />
     <Compile Include="StaticFile\ResponseCompressionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EcmaScript.NET\EcmaScript.NET.csproj">
-      <Project>{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}</Project>
-      <Name>EcmaScript.NET</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Yahoo.Yui.Compressor\Yahoo.Yui.Compressor.csproj">
-      <Project>{7A85988C-2836-4BD6-9143-17C606B218D9}</Project>
-      <Name>Yahoo.Yui.Compressor</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

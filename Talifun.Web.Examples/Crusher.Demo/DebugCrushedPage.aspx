@@ -18,6 +18,8 @@
             <li>Updating any css or js file will result in a new hash for the file.</li>
         </ul>    
     </div>
+    
+    <input type="button" onclick="TestMessage()" value="Test" />
     </form>
 </body>
 </html>
