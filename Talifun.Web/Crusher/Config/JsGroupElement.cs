@@ -30,7 +30,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the name of the configuration element represented by this instance.
+        /// The name of the configuration element represented by this instance.
         /// </summary>
         [ConfigurationProperty("name", DefaultValue = null, IsRequired = true, IsKey = true)]
         public override string Name
@@ -40,7 +40,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the file path for the output js file
+        /// The file path for the output js file
         /// </summary>
         /// <remarks>
         /// This is used as the unique identifier for the group so ensure that it is unique,
@@ -54,7 +54,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the url for output js file.
+        /// The url for output js file.
         /// </summary>
         /// <remarks>
         /// Use this to set the url to a CDN.
@@ -67,7 +67,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets if the crushed version of the js file should be used
+        /// Should the crushed version of the js file should be used
         /// </summary>
         [ConfigurationProperty("debug", DefaultValue = null, IsRequired = true)]
         public bool Debug
@@ -88,7 +88,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets the collection of configuration properties contained by this configuration element.
+        /// The collection of configuration properties contained by this configuration element.
         /// </summary>
         /// <returns>The <see cref="T:System.Configuration.ConfigurationPropertyCollection"></see> collection of properties for the element.</returns>
         protected override ConfigurationPropertyCollection Properties

@@ -26,7 +26,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the name of the configuration element represented by this instance.
+        /// The name of the configuration element represented by this instance.
         /// </summary>
         [ConfigurationProperty("name", DefaultValue = null, IsRequired = true, IsKey = true)]
         public override string Name
@@ -36,7 +36,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the file path for the css file
+        /// The file path for the css file
         /// </summary>
         [ConfigurationProperty("filePath", DefaultValue = null, IsRequired = true)]
         public string FilePath
@@ -46,7 +46,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the compression type to use for the css file
+        /// The compression type to use for the css file
         /// </summary>
         [ConfigurationProperty("compressionType", DefaultValue = CssCompressionType.Hybrid, IsRequired = false)]
         public CssCompressionType CompressionType
@@ -56,7 +56,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets the collection of configuration properties contained by this configuration element.
+        /// The collection of configuration properties contained by this configuration element.
         /// </summary>
         /// <returns>The <see cref="T:System.Configuration.ConfigurationPropertyCollection"></see> collection of properties for the element.</returns>
         protected override ConfigurationPropertyCollection Properties

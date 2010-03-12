@@ -32,7 +32,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the name of the configuration element represented by this instance.
+        /// The name of the configuration element represented by this instance.
         /// </summary>
         /// <remarks>
         /// This is used as the key for caching so make sure that its unique for each group of css files
@@ -45,7 +45,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the file path for the output css file
+        /// The file path for the output css file
         /// </summary>
         /// <remarks>
         /// This is used as the unique identifier for the group so ensure that it is unique,
@@ -59,7 +59,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the url for output css file.
+        /// The url for output css file.
         /// </summary>
         /// <remarks>
         /// Use this to set the url to a CDN.
@@ -72,7 +72,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets the css media to use
+        /// The css media to use
         /// </summary>
         [ConfigurationProperty("media", DefaultValue = "screen", IsRequired = true)]
         public string Media
@@ -82,7 +82,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets or sets if the crushed version of the css file should be used
+        /// Should the crushed version of the css file should be used
         /// </summary>
         [ConfigurationProperty("debug", DefaultValue = null, IsRequired = true)]
         public bool Debug
@@ -103,7 +103,7 @@ namespace Talifun.Web.Crusher.Config
         }
 
         /// <summary>
-        /// Gets the collection of configuration properties contained by this configuration element.
+        /// The collection of configuration properties contained by this configuration element.
         /// </summary>
         /// <returns>The <see cref="T:System.Configuration.ConfigurationPropertyCollection"></see> collection of properties for the element.</returns>
         protected override ConfigurationPropertyCollection Properties
