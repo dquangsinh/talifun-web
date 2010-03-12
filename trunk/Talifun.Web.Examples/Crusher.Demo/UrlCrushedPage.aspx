@@ -20,6 +20,8 @@
             <li>Use the url property to host content on CDN. e.g. "http://cdn.net/1234/site.css" or "http://cdn.net/1234/site.js" the hash is appended to the end of the url, the hash is based off the local crushed file.</li>
         </ul>
     </div>
+    
+    <input type="button" onclick="TestMessage()" value="Test" />
     </form>
 </body>
 </html>

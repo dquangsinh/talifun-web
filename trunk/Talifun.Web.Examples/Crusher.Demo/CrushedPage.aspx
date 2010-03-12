@@ -18,6 +18,8 @@
             <li>Updating any css or js file will result in the crushed file being regenerated and a new hash being created.</li>
         </ul>
     </div>
+    
+    <input type="button" onclick="TestMessage()" value="Test" />
     </form>
 </body>
 </html>

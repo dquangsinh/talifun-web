@@ -53,32 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionFilter\FlashCompatibleAuthorize\FlashCompatibleAuthorizeAttribute.cs" />
-    <Compile Include="ActionFilter\ResourceNotFound\HandleResourceNotFoundAttribute.cs" />
-    <Compile Include="ActionFilter\ResourceNotFound\ResourceNotFoundException.cs" />
     <Compile Include="ActionResult\ContentDisposition\ContentDispositionActionResult.cs" />
     <Compile Include="ActionResult\StaticFile\StaticFileActionResult.cs" />
-    <Compile Include="HostMvc\MvcAppHost.cs" />
-    <Compile Include="ModelBinder\EnumBinder\EnumBinder.cs" />
-    <Compile Include="ModelBinder\EnumBinder\EnumHelper.cs" />
-    <Compile Include="ModelMasterView\IMasterModelGenerator.cs" />
-    <Compile Include="ModelMasterView\MasterModelViewMasterPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routing\Constraint\UrlEnumMatchConstraint.cs" />
-    <Compile Include="Routing\Constraint\UrlExactMatchConstraint.cs" />
-    <Compile Include="Routing\Route\Legacy\LegacyExtensions.cs" />
-    <Compile Include="Routing\Route\Legacy\LegacyHandler.cs" />
-    <Compile Include="Routing\Route\Legacy\LegacyRoute.cs" />
-    <Compile Include="Routing\Route\Legacy\LegacyRouteHandler.cs" />
-    <Compile Include="Routing\Route\RoutingTransformBase.cs" />
-    <Compile Include="Routing\Route\Vanilla\BoundUrl.cs" />
-    <Compile Include="Routing\Route\Vanilla\VanillaExtensions.cs" />
-    <Compile Include="Routing\Route\Vanilla\VanillaHandler.cs" />
-    <Compile Include="Routing\Route\Vanilla\VanillaRoute.cs" />
-    <Compile Include="Routing\Route\Vanilla\VanillaRouteHandler.cs" />
-    <Compile Include="Routing\Route\Vanilla\VanillaTransform.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Talifun.Web\Talifun.Web.csproj">
