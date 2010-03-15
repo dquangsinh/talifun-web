@@ -86,6 +86,12 @@ namespace Talifun.Web.StaticFile
             };
         }
 
+        public static void AppendHeader(HttpResponse response, string headerName, string headerValue)
+        {
+            //response.AppendHeader(headerName, headerValue);
+            response.AddHeader(headerName, headerValue);
+        }
+
         public static void ProcessRequest(HttpContext context)
         {
             var request = context.Request;
@@ -129,7 +135,8 @@ namespace Talifun.Web.StaticFile
             if (!fileExtensionMatch.Compress)
                 compressionType = ResponseCompressionType.None;
 
-            // If it is a partial request we need to get bytes of orginal entity data and only compress on send
+            // If it is a partial request we need to get bytes of orginal entity data and not compress the output at all
+            //otherwise we might end up with a chunked response occuring
             var entityStoredWithCompressionType = compressionType;
             var isRangeRequest = IsRangeRequest(request);
             if (isRangeRequest)
@@ -299,7 +306,7 @@ namespace Talifun.Web.StaticFile
         {
             if (responseCompressionType != ResponseCompressionType.None)
             {
-                response.AppendHeader("Content-Encoding", responseCompressionType.ToString().ToLower());
+                AppendHeader(response, "Content-Encoding", responseCompressionType.ToString().ToLower());
             }
         }
 
@@ -331,7 +338,7 @@ namespace Talifun.Web.StaticFile
             response.Cache.SetMaxAge(maxAge);
 
             // Tell the client software that we accept Range request
-            response.AppendHeader(HTTP_HEADER_ACCEPT_RANGES, HTTP_HEADER_ACCEPT_RANGES_BYTES);
+            AppendHeader(response, HTTP_HEADER_ACCEPT_RANGES, HTTP_HEADER_ACCEPT_RANGES_BYTES);
         }
 
         #region Responses
@@ -1034,7 +1041,7 @@ namespace Talifun.Web.StaticFile
             if (compressionType == ResponseCompressionType.None)
             {
                 //TODO: Is this necessary - Will head still work without this set?
-                response.AppendHeader(HTTP_HEADER_CONTENT_LENGTH, contentLength.ToString());
+                AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, contentLength.ToString());
             }
             else if (compressionType == ResponseCompressionType.GZip)
             {
@@ -1078,14 +1085,14 @@ namespace Talifun.Web.StaticFile
                 SetContentEncoding(response, compressionType);
 
                 //TODO: Is this necessary - Will head still work without this set?
-                response.AppendHeader(HTTP_HEADER_CONTENT_LENGTH, contentLength.ToString());
+                AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, contentLength.ToString());
             }
             else if (entityStoredWithCompressionType == ResponseCompressionType.None)
             {
                 if (compressionType == ResponseCompressionType.None)
                 {
                     //TODO: Is this necessary - Will head still work without this set?
-                    response.AppendHeader(HTTP_HEADER_CONTENT_LENGTH, contentLength.ToString());
+                    AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, contentLength.ToString());
                 }
                 else if (compressionType == ResponseCompressionType.GZip)
                 {
@@ -1199,13 +1206,13 @@ namespace Talifun.Web.StaticFile
                     var startRange = ranges[0].StartRange;
                     var endRange = ranges[0].EndRange;
                     //TODO: Is this necessary - Will head still work without this set?
-                    response.AppendHeader(HTTP_HEADER_CONTENT_LENGTH, (endRange - startRange + 1).ToString());
+                    AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, (endRange - startRange + 1).ToString());
                 }
                 else
                 {
                     //TODO: Is this necessary - Will head still work without this set?
                     var partialContentLength = GetMultipartPartialRequestLength(ranges, contentType, contentLength);
-                    response.AppendHeader(HTTP_HEADER_CONTENT_LENGTH, partialContentLength.ToString());
+                    AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, partialContentLength.ToString());
                 }
             }
             else if (compressionType == ResponseCompressionType.GZip)
@@ -1225,7 +1232,7 @@ namespace Talifun.Web.StaticFile
                 var endRange = ranges[0].EndRange;
 
                 response.ContentType = contentType;
-                response.AppendHeader(HTTP_HEADER_CONTENT_RANGE, "bytes " + startRange + "-" + endRange + "/" + contentLength);
+                AppendHeader(response, HTTP_HEADER_CONTENT_RANGE, "bytes " + startRange + "-" + endRange + "/" + contentLength);
                 response.Flush();
 
                 if (request.HttpMethod == HTTP_METHOD_HEAD)
