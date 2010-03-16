@@ -16,7 +16,7 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 = Features =
 
 ==Resumable downloads==
-Partial requests are processed, and result in a *206 partial* response.
+Partial requests are processed by handler, and result in a *206 partial* response.
 
 This is very useful when sending large files or streaming media files, as only the requested bytes are served. Adobe Reader uses this functionality to download the first page of a pdf document and display it before it has finished downloading the entire document.
 
@@ -44,6 +44,7 @@ It supports the following caching http header tags:
 ==Compression==
 Gzip and deflate compression is supported. Deflate is probably the optimal compression type to use:
 
+http://www.stardeveloper.com/articles/display.html?article=2008111201&page=1
 http://madskristensen.net/post/Compression-and-performance-GZip-vs-Deflate.aspx
 
 These file types will benefit from further compression:
@@ -56,6 +57,8 @@ There are some file types that will not benefit from further compression:
   * wav, mp3, m4a, aac  (wav is often compressed)
   * 3gp, 3g2, asf, avi, dv, flv, mov, mp4, mpg, mpeg, wmv
   * zip, rar, 7z, arj
+
+Compression of *multipart/byteranges* is supported too.
 
 = Configuration =
 
