@@ -45,6 +45,7 @@ It supports the following caching http header tags:
 Gzip and deflate compression is supported. Deflate is probably the optimal compression type to use:
 
 http://www.stardeveloper.com/articles/display.html?article=2008111201&page=1
+
 http://madskristensen.net/post/Compression-and-performance-GZip-vs-Deflate.aspx
 
 These file types will benefit from further compression:
