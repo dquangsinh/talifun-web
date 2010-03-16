@@ -51,7 +51,7 @@ These file types will benefit from further compression:
   * doc, xls, ppt, docx, xlsx, pptx
 
 There are some file types that will not benefit from further compression:
-  * pdf (causes problems with certain versions in IE)
+  * pdf (causes problems with certain versions of Adobe Reader in IE)
   * png, jpg, jpeg, gif, ico
   * wav, mp3, m4a, aac  (wav is often compressed)
   * 3gp, 3g2, asf, avi, dv, flv, mov, mp4, mpg, mpeg, wmv
