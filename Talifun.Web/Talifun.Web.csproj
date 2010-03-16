@@ -126,12 +126,12 @@
     <Compile Include="StaticFile\FileHandlerCacheItem.cs" />
     <Compile Include="Compress\PageCompressionModule.cs" />
     <Compile Include="StaticFile\StaticFileHelper.cs" />
-    <Compile Include="StaticFile\StaticFileAsyncHandler.cs" />
     <Compile Include="StaticFile\StaticFileHandler.cs" />
     <Compile Include="StaticFile\HttpContextProcessorDelegate.cs" />
     <Compile Include="StaticFile\RangeItem.cs" />
     <Compile Include="StaticFile\ResponseCompressionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StaticFile\WebServerType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Crusher\Config\Crusher.xsd" />

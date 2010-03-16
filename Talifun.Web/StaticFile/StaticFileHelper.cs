@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Reflection;
+using System.Security.Permissions;
 using System.Web;
 using System.Web.Caching;
 using Talifun.Web.StaticFile.Config;
@@ -40,8 +42,12 @@ namespace Talifun.Web.StaticFile
         private static readonly Dictionary<string, FileExtensionMatch> fileExtensionMatches = null;
         private static readonly FileExtensionMatch fileExtensionMatchDefault = null;
 
+        internal static WebServerType WebServerType { get; set; }
+
         static StaticFileHelper()
         {
+            WebServerType = CurrentStaticFileHandlerConfiguration.Current.WebServerType;
+            
             fileExtensionMatches = new Dictionary<string, FileExtensionMatch>();
 
             var fileExtensionElements = CurrentStaticFileHandlerConfiguration.Current.FileExtensions;
@@ -86,14 +92,96 @@ namespace Talifun.Web.StaticFile
             };
         }
 
+        /// <summary>
+        /// Return the http worker request for the current request.
+        /// </summary>
+        /// <remarks>
+        /// This is needed for when we manually create an HttpContext.
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [ReflectionPermission(SecurityAction.Assert, RestrictedMemberAccess = true)]
+        public static HttpWorkerRequest GetWorkerRequestViaReflection(HttpRequest request)
+        {
+            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+            // In Mono, the field has a different name.
+            var wrField = request.GetType().GetField("_wr", bindingFlags) ?? request.GetType().GetField("worker_request", bindingFlags);
+
+            if (wrField == null) return null;
+
+            return (HttpWorkerRequest)wrField.GetValue(request);
+        }
+
+        /// <summary>
+        /// Detect the web server being used to serve requests
+        /// </summary>
+        /// <param name="context">Http context</param>
+        [SecurityPermission(SecurityAction.Assert, UnmanagedCode=true)]
+        public static void DetectWebServerType(HttpContext context)
+        {
+            var provider = (IServiceProvider)context;
+            var worker = (HttpWorkerRequest)provider.GetService(typeof(HttpWorkerRequest)) ?? GetWorkerRequestViaReflection(context.Request);
+
+            if (worker != null)
+            {
+                var workerType = worker.GetType();
+                if (workerType != null)
+                {
+                    switch (workerType.FullName)
+                    {
+                        case "System.Web.Hosting.ISAPIWorkerRequest":
+                            //IIS 7 in Classic mode gets lumped in here too
+                            WebServerType = WebServerType.IIS6;
+                            break;
+                        case "Microsoft.VisualStudio.WebHost.Request":
+                        case "Cassini.Request":
+                            WebServerType = WebServerType.Cassini;
+                            break;
+                        case "System.Web.Hosting.IIS7WorkerRequest":
+                            WebServerType = WebServerType.IIS7;
+                            break;
+                        default:
+                            WebServerType = WebServerType.Unknown;
+                            break;
+                    }
+
+                    return;
+                }
+            }
+
+            WebServerType = WebServerType.Unknown;
+        }
+
+        /// <summary>
+        /// Append header to response
+        /// </summary>
+        /// <remarks>
+        /// Seems like appendheader only works with IIS 7
+        /// </remarks>
+        /// <param name="response"></param>
+        /// <param name="headerName"></param>
+        /// <param name="headerValue"></param>
         public static void AppendHeader(HttpResponse response, string headerName, string headerValue)
         {
-            //response.AppendHeader(headerName, headerValue);
-            response.AddHeader(headerName, headerValue);
+            switch (WebServerType)
+            {
+                case WebServerType.IIS7:
+                    response.AppendHeader(headerName, headerValue);
+                    break;
+                default:
+                    response.AddHeader(headerName, headerValue);
+                    break;
+            }
         }
 
         public static void ProcessRequest(HttpContext context)
         {
+            if (HttpContext.Current == null)
+            {
+                HttpContext.Current = context;
+            }
+
             var request = context.Request;
             var response = context.Response;
 
@@ -105,200 +193,230 @@ namespace Talifun.Web.StaticFile
 
         public static void ProcessRequest(HttpRequest request, HttpResponse response, FileInfo file)
         {
-            var physicalFilePath = file.FullName;
-            var fileExtension = file.Extension.ToLower(); //in case url rewriting did something smart
-
-            if (!ValidateHttpMethod(request))
+            if (HttpContext.Current == null)
             {
-                //If we are unable to parse url send 405 Method not allowed
-                SendMethodNotAllowed(response);
-                return;
+                var httpWorkerRequest = GetWorkerRequestViaReflection(request);
+                HttpContext.Current = new HttpContext(httpWorkerRequest);
             }
 
-            if (physicalFilePath.EndsWith(".asp", StringComparison.InvariantCultureIgnoreCase) ||
-                physicalFilePath.EndsWith(".aspx", StringComparison.InvariantCultureIgnoreCase))
+            if (WebServerType == WebServerType.NotSet)
             {
-                //If we are unable to parse url send 403 Path Forbidden
-                SendForbidden(response);
-                return;
+                DetectWebServerType(HttpContext.Current);
             }
 
-            var compressionType = GetCompressionMode(request);
 
-            FileExtensionMatch fileExtensionMatch = null;
-            if (!fileExtensionMatches.TryGetValue(fileExtension, out fileExtensionMatch))
-            {
-                fileExtensionMatch = fileExtensionMatchDefault;
-            }
-
-            // If this is a binary file like image, then we won't compress it.
-            if (!fileExtensionMatch.Compress)
-                compressionType = ResponseCompressionType.None;
-
-            // If it is a partial request we need to get bytes of orginal entity data and not compress the output at all
-            //otherwise we might end up with a chunked response occuring
-            var entityStoredWithCompressionType = compressionType;
-            var isRangeRequest = IsRangeRequest(request);
-            if (isRangeRequest)
-            {
-                entityStoredWithCompressionType = ResponseCompressionType.None;
-            }
-
-            // If the response bytes are already cached, then deliver the bytes directly from cache
-            var cacheKey = typeof(StaticFileHelper) + ":" + entityStoredWithCompressionType + ":" + physicalFilePath;
-
-            FileHandlerCacheItem fileHandlerCacheItem = null;
-            var cachedValue = HttpRuntime.Cache.Get(cacheKey);
-            if (cachedValue != null)
-            {
-                fileHandlerCacheItem = (FileHandlerCacheItem)cachedValue;
-            }
-            else
-            {
-                //File does not exist
-                if (!file.Exists)
-                {
-                    SendNotFoundResponseHeaders(response);
-                    return;
-                }
-
-                //File too large to send
-                if (file.Length > MAX_FILE_SIZE_TO_SERVE)
-                {
-                    SendRequestedEntityIsTooLargeResponseHeaders(response);
-                    return;
-                }
-
-                var etag = string.Empty;
-                var lastModifiedFileTime = file.LastWriteTime.ToUniversalTime();
-                //When a browser sets the If-Modified-Since field to 13-1-2010 10:30:58, another DateTime instance is created, but this one has a Ticks value of 633989754580000000
-                //But the time from the file system is accurate to a tick. So it might be 633989754586086250.
-                var lastModified = new DateTime(lastModifiedFileTime.Year, lastModifiedFileTime.Month, lastModifiedFileTime.Day, lastModifiedFileTime.Hour, lastModifiedFileTime.Minute, lastModifiedFileTime.Second);
-                var contentType = MimeHelper.GetMimeType(file.Extension);
-                var contentLength = file.Length;
-
-                //ETAG is always calculated from uncompressed entity data
-                switch (fileExtensionMatch.EtagMethod)
-                {
-                    case EtagMethodType.MD5:
-                        etag = HashHelper.CalculateMd5Etag(file);
-                        break;
-                    case EtagMethodType.LastModified:
-                        etag = lastModified.ToString();
-                        break;
-                    default:
-                        throw new Exception("Unknown etag method generation");
-                }
-
-                fileHandlerCacheItem = new FileHandlerCacheItem
-                {
-                    EntityEtag = etag,
-                    EntityLastModified = lastModified,
-                    ContentLength = contentLength,
-                    EntityContentType = contentType
-                };
-
-                if (fileExtensionMatch.ServeFromMemory
-                    && (contentLength <= fileExtensionMatch.MaxMemorySize))
-                {
-                    // When not compressed, buffer is the size of the file but when compressed, 
-                    // initial buffer size is one third of the file size. Assuming, compression 
-                    // will give us less than 1/3rd of the size
-                    using (var memoryStream = new MemoryStream(
-                        entityStoredWithCompressionType == ResponseCompressionType.None
-                            ?
-                                Convert.ToInt32(file.Length)
-                            :
-                                Convert.ToInt32((double)file.Length / 3)))
-                    {
-                        ReadEntityData(compressionType, file, memoryStream);
-                        var entityData = memoryStream.ToArray();
-                        var entityDataLength = entityData.LongLength;
-
-                        fileHandlerCacheItem.EntityData = entityData;
-                        fileHandlerCacheItem.ContentLength = entityDataLength;
-                    }
-                }
-
-                //Put fileHandlerCacheItem into cache with 30 min sliding expiration, also if file changes then remove fileHandlerCacheItem from cache
-                HttpRuntime.Cache.Insert(
-                    cacheKey,
-                    fileHandlerCacheItem,
-                    new CacheDependency(physicalFilePath),
-                    Cache.NoAbsoluteExpiration,
-                    fileExtensionMatch.MemorySlidingExpiration,
-                    CacheItemPriority.BelowNormal,
-                    null);
-            }
-
-            //Unable to parse request range header
-            List<RangeItem> ranges = null;
-            var requestRange = TryParseRequestRangeHeader(request, fileHandlerCacheItem.ContentLength, out ranges);
-            if (requestRange.HasValue && !requestRange.Value)
-            {
-                SendRequestedRangeNotSatisfiableResponseHeaders(response);
-                return;
-            }
-
-            //Check if cached response is valid and if it is send appropriate response headers
-            var requestHandled = GenerateResponseHeaders(request, response, fileHandlerCacheItem.EntityLastModified,
-                                                         fileHandlerCacheItem.EntityEtag);
-
-            if (requestHandled)
-            {
-                //Browser cache is ok so, just load from cache
-                return;
-            }
-
-            //How the entity should be cached on the client
-            SetResponseCachable(response, fileHandlerCacheItem.EntityLastModified, fileHandlerCacheItem.EntityEtag, fileExtensionMatch.Expires);
-
-            Stream entityDataStream = null;
             try
             {
-                if (fileHandlerCacheItem.EntityData != null)
+
+
+                var physicalFilePath = file.FullName;
+                var fileExtension = file.Extension.ToLower(); //in case url rewriting did something smart
+
+                if (!ValidateHttpMethod(request))
                 {
-                    entityDataStream = new MemoryStream(fileHandlerCacheItem.EntityData);
+                    //If we are unable to parse url send 405 Method not allowed
+                    SendMethodNotAllowed(response);
+                    return;
+                }
+
+                if (physicalFilePath.EndsWith(".asp", StringComparison.InvariantCultureIgnoreCase) ||
+                    physicalFilePath.EndsWith(".aspx", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    //If we are unable to parse url send 403 Path Forbidden
+                    SendForbidden(response);
+                    return;
+                }
+
+                var compressionType = GetCompressionMode(request);
+
+                FileExtensionMatch fileExtensionMatch = null;
+                if (!fileExtensionMatches.TryGetValue(fileExtension, out fileExtensionMatch))
+                {
+                    fileExtensionMatch = fileExtensionMatchDefault;
+                }
+
+                // If this is a binary file like image, then we won't compress it.
+                if (!fileExtensionMatch.Compress)
+                    compressionType = ResponseCompressionType.None;
+
+                // If it is a partial request we need to get bytes of orginal entity data, we will compress the byte ranges returned
+                var entityStoredWithCompressionType = compressionType;
+                var isRangeRequest = IsRangeRequest(request);
+                if (isRangeRequest)
+                {
+                    entityStoredWithCompressionType = ResponseCompressionType.None;
+                }
+
+                // If the response bytes are already cached, then deliver the bytes directly from cache
+                var cacheKey = typeof (StaticFileHelper) + ":" + entityStoredWithCompressionType + ":" +
+                               physicalFilePath;
+
+                FileHandlerCacheItem fileHandlerCacheItem = null;
+                var cachedValue = HttpRuntime.Cache.Get(cacheKey);
+                if (cachedValue != null)
+                {
+                    fileHandlerCacheItem = (FileHandlerCacheItem) cachedValue;
                 }
                 else
                 {
+                    //File does not exist
                     if (!file.Exists)
                     {
                         SendNotFoundResponseHeaders(response);
                         return;
                     }
 
-                    //We are going to let the output filter do the necessary compression
-                    entityStoredWithCompressionType = ResponseCompressionType.None;
-                    entityDataStream = FileHelper.OpenFileStream(file, 5, FileMode.Open, FileAccess.Read, FileShare.Read);
-                }
-
-                if (response.StatusCode == (int)HttpStatusCode.PartialContent)
-                {
-                    //Data is in uncompressed format
-                    if (entityStoredWithCompressionType != ResponseCompressionType.None)
+                    //File too large to send
+                    if (file.Length > MAX_FILE_SIZE_TO_SERVE)
                     {
-                        throw new Exception("Cannot do a partial response on compressed data");
+                        SendRequestedEntityIsTooLargeResponseHeaders(response);
+                        return;
                     }
 
-                    //Send a partial response
-                    SendPartialResponse(request, response, compressionType, entityDataStream, BufferSize, fileHandlerCacheItem.EntityContentType, fileHandlerCacheItem.ContentLength, ranges);
-                }
-                else
-                {
-                    //Data is already compressed to the correct format
+                    var etag = string.Empty;
+                    var lastModifiedFileTime = file.LastWriteTime.ToUniversalTime();
+                    //When a browser sets the If-Modified-Since field to 13-1-2010 10:30:58, another DateTime instance is created, but this one has a Ticks value of 633989754580000000
+                    //But the time from the file system is accurate to a tick. So it might be 633989754586086250.
+                    var lastModified = new DateTime(lastModifiedFileTime.Year, lastModifiedFileTime.Month,
+                                                    lastModifiedFileTime.Day, lastModifiedFileTime.Hour,
+                                                    lastModifiedFileTime.Minute, lastModifiedFileTime.Second);
+                    var contentType = MimeHelper.GetMimeType(file.Extension);
+                    var contentLength = file.Length;
 
-                    //Send a full response
-                    SendFullResponse(request, response, compressionType, entityDataStream, BufferSize, entityStoredWithCompressionType, fileHandlerCacheItem.EntityContentType, fileHandlerCacheItem.ContentLength);
+                    //ETAG is always calculated from uncompressed entity data
+                    switch (fileExtensionMatch.EtagMethod)
+                    {
+                        case EtagMethodType.MD5:
+                            etag = HashHelper.CalculateMd5Etag(file);
+                            break;
+                        case EtagMethodType.LastModified:
+                            etag = lastModified.ToString();
+                            break;
+                        default:
+                            throw new Exception("Unknown etag method generation");
+                    }
+
+                    fileHandlerCacheItem = new FileHandlerCacheItem
+                                               {
+                                                   EntityEtag = etag,
+                                                   EntityLastModified = lastModified,
+                                                   ContentLength = contentLength,
+                                                   EntityContentType = contentType
+                                               };
+
+                    if (fileExtensionMatch.ServeFromMemory
+                        && (contentLength <= fileExtensionMatch.MaxMemorySize))
+                    {
+                        // When not compressed, buffer is the size of the file but when compressed, 
+                        // initial buffer size is one third of the file size. Assuming, compression 
+                        // will give us less than 1/3rd of the size
+                        using (var memoryStream = new MemoryStream(
+                            entityStoredWithCompressionType == ResponseCompressionType.None
+                                ?
+                                    Convert.ToInt32(file.Length)
+                                :
+                                    Convert.ToInt32((double) file.Length/3)))
+                        {
+                            ReadEntityData(entityStoredWithCompressionType, file, memoryStream);
+                            var entityData = memoryStream.ToArray();
+                            var entityDataLength = entityData.LongLength;
+
+                            fileHandlerCacheItem.EntityData = entityData;
+                            fileHandlerCacheItem.ContentLength = entityDataLength;
+                        }
+                    }
+
+                    //Put fileHandlerCacheItem into cache with 30 min sliding expiration, also if file changes then remove fileHandlerCacheItem from cache
+                    HttpRuntime.Cache.Insert(
+                        cacheKey,
+                        fileHandlerCacheItem,
+                        new CacheDependency(physicalFilePath),
+                        Cache.NoAbsoluteExpiration,
+                        fileExtensionMatch.MemorySlidingExpiration,
+                        CacheItemPriority.BelowNormal,
+                        null);
+                }
+
+                //Unable to parse request range header
+                List<RangeItem> ranges = null;
+                var requestRange = TryParseRequestRangeHeader(request, fileHandlerCacheItem.ContentLength, out ranges);
+                if (requestRange.HasValue && !requestRange.Value)
+                {
+                    SendRequestedRangeNotSatisfiableResponseHeaders(response);
+                    return;
+                }
+
+                //Check if cached response is valid and if it is send appropriate response headers
+                var requestHandled = GenerateResponseHeaders(request, response, fileHandlerCacheItem.EntityLastModified,
+                                                             fileHandlerCacheItem.EntityEtag);
+
+                if (requestHandled)
+                {
+                    //Browser cache is ok so, just load from cache
+                    return;
+                }
+
+                //How the entity should be cached on the client
+                SetResponseCachable(response, fileHandlerCacheItem.EntityLastModified, fileHandlerCacheItem.EntityEtag,
+                                    fileExtensionMatch.Expires);
+
+                Stream entityDataStream = null;
+                try
+                {
+                    if (fileHandlerCacheItem.EntityData != null)
+                    {
+                        entityDataStream = new MemoryStream(fileHandlerCacheItem.EntityData);
+                    }
+                    else
+                    {
+                        if (!file.Exists)
+                        {
+                            SendNotFoundResponseHeaders(response);
+                            return;
+                        }
+
+                        //We are going to let the output filter do the necessary compression
+                        entityStoredWithCompressionType = ResponseCompressionType.None;
+                        entityDataStream = FileHelper.OpenFileStream(file, 5, FileMode.Open, FileAccess.Read,
+                                                                     FileShare.Read);
+                    }
+
+                    if (response.StatusCode == (int) HttpStatusCode.PartialContent)
+                    {
+                        //Data is in uncompressed format
+                        if (entityStoredWithCompressionType != ResponseCompressionType.None)
+                        {
+                            throw new Exception("Cannot do a partial response on compressed data");
+                        }
+
+                        //Send a partial response
+                        SendPartialResponse(request, response, compressionType, entityDataStream, BufferSize,
+                                            fileHandlerCacheItem.EntityContentType, fileHandlerCacheItem.ContentLength,
+                                            ranges);
+                    }
+                    else
+                    {
+                        //Data is already compressed to the correct format
+
+                        //Send a full response
+                        SendFullResponse(request, response, compressionType, entityDataStream, BufferSize,
+                                         entityStoredWithCompressionType, fileHandlerCacheItem.EntityContentType,
+                                         fileHandlerCacheItem.ContentLength);
+                    }
+                }
+                finally
+                {
+                    if (entityDataStream != null)
+                    {
+                        entityDataStream.Dispose();
+                        entityDataStream = null;
+                    }
                 }
             }
             finally
             {
-                if (entityDataStream != null)
-                {
-                    entityDataStream.Dispose();
-                    entityDataStream = null;
-                }
+                //We want our custom headers to be outputted and not overwritten
+                response.Flush();
             }
         }
 
@@ -1055,7 +1173,6 @@ namespace Talifun.Web.StaticFile
             }
 
             response.ContentType = contentType;
-            response.Flush();
 
             if (request.HttpMethod == HTTP_METHOD_HEAD)
             {
@@ -1110,7 +1227,6 @@ namespace Talifun.Web.StaticFile
                 throw new NotImplementedException("Need to decode in memory, and then stream it");
             }
             response.ContentType = contentType;
-            response.Flush();
 
             if (request.HttpMethod == HTTP_METHOD_HEAD)
             {
@@ -1205,12 +1321,10 @@ namespace Talifun.Web.StaticFile
                 {
                     var startRange = ranges[0].StartRange;
                     var endRange = ranges[0].EndRange;
-                    //TODO: Is this necessary - Will head still work without this set?
                     AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, (endRange - startRange + 1).ToString());
                 }
                 else
                 {
-                    //TODO: Is this necessary - Will head still work without this set?
                     var partialContentLength = GetMultipartPartialRequestLength(ranges, contentType, contentLength);
                     AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, partialContentLength.ToString());
                 }
@@ -1233,7 +1347,6 @@ namespace Talifun.Web.StaticFile
 
                 response.ContentType = contentType;
                 AppendHeader(response, HTTP_HEADER_CONTENT_RANGE, "bytes " + startRange + "-" + endRange + "/" + contentLength);
-                response.Flush();
 
                 if (request.HttpMethod == HTTP_METHOD_HEAD)
                 {
@@ -1245,7 +1358,6 @@ namespace Talifun.Web.StaticFile
             else
             {
                 response.ContentType = MULTIPART_CONTENTTYPE;
-                response.Flush();
 
                 if (request.HttpMethod == HTTP_METHOD_HEAD)
                 {

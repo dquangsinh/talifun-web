@@ -7,6 +7,7 @@ namespace Talifun.Web.StaticFile.Config
     public sealed class StaticFileHandlerSection : ConfigurationSection
     {
         private static ConfigurationPropertyCollection properties = new ConfigurationPropertyCollection();
+        private static readonly ConfigurationProperty webServerType = new ConfigurationProperty("webServerType", typeof(WebServerType), WebServerType.NotSet, ConfigurationPropertyOptions.None);
         private static readonly ConfigurationProperty fileExtensionDefault = new ConfigurationProperty("fileExtensionDefault", typeof(FileExtensionDefaultElement), null, ConfigurationPropertyOptions.IsRequired);
         private static readonly ConfigurationProperty fileExtensions = new ConfigurationProperty("fileExtensions", typeof(FileExtensionElementCollection), null, ConfigurationPropertyOptions.IsRequired | ConfigurationPropertyOptions.IsDefaultCollection);
 
@@ -17,8 +18,19 @@ namespace Talifun.Web.StaticFile.Config
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static StaticFileHandlerSection()
         {
+            properties.Add(webServerType);
             properties.Add(fileExtensionDefault);
             properties.Add(fileExtensions);
+        }
+
+        /// <summary>
+        /// Gets or sets the web server type used to serve requests.
+        /// </summary>
+        [ConfigurationProperty("webServerType", DefaultValue = WebServerType.NotSet, IsRequired = false)]
+        public WebServerType WebServerType
+        {
+            get { return ((WebServerType)base[webServerType]); }
+            set { base[webServerType] = value; }
         }
 
         /// <summary>
