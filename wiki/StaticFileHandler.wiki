@@ -26,7 +26,7 @@ It supports the following partial http header tags:
   * If-Range
 
 ==Server side caching==
-The handler stores original and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial content can be served from memory too.
+The handler stores original and compressed content in memory, bypassing hard drive. This can really speed up web requests. Partial content can be served from memory too, unlike IIS kernel mode caching.
 
 ==Client side caching==
 *ETag* and *Expires* http headers are sent by handler. Matched cached requests result in a *304 Not Modified* response. 
