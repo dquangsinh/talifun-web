@@ -18,7 +18,9 @@ When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
 ==Resumable downloads==
 Partial requests are processed by handler, and result in a *206 partial* response.
 
-This is very useful when sending large files or streaming media files, as only the requested bytes are served. Adobe Reader uses this functionality to download the first page of a pdf document and display it before it has finished downloading the entire document.
+This is very useful when sending large files or streaming media files, as only the requested bytes are served. 
+
+Adobe Reader in "Allow fast web view" mode starts downloading a pdf and soon as it has enough bytes to display the first page it aborts the connection to the web server, and displays the first page. Then it makes a "multipart/byteranges" request to retrieve the rest of the document. This is what causes most download scripts to fail when serving pdf content.
 
 It supports the following partial http header tags:
   * Accept-Ranges
