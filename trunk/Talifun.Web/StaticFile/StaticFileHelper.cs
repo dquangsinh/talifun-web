@@ -5,6 +5,8 @@ using System.IO.Compression;
 using System.Net;
 using System.Reflection;
 using System.Security.Permissions;
+using System.Threading;
+using System.Text;
 using System.Web;
 using System.Web.Caching;
 using Talifun.Web.StaticFile.Config;
@@ -38,6 +40,8 @@ namespace Talifun.Web.StaticFile
         internal const string HTTP_HEADER_IF_MODIFIED_SINCE = "If-Modified-Since";
         internal const string HTTP_HEADER_IF_UNMODIFIED_SINCE = "If-Unmodified-Since";
         internal const string HTTP_HEADER_UNLESS_MODIFIED_SINCE = "Unless-Modified-Since";
+
+        internal const uint ERROR_THE_REMOTE_HOST_CLOSED_THE_CONNECTION = 0x80072746; //WSAECONNRESET (10054)
 
         private static readonly Dictionary<string, FileExtensionMatch> fileExtensionMatches = null;
         private static readonly FileExtensionMatch fileExtensionMatchDefault = null;
@@ -204,10 +208,11 @@ namespace Talifun.Web.StaticFile
                 DetectWebServerType(HttpContext.Current);
             }
 
-
+            //We don't want to use up all the servers memory keeping a copy of the file, we just want to stream file to client
+            response.BufferOutput = false;
+      
             try
             {
-
 
                 var physicalFilePath = file.FullName;
                 var fileExtension = file.Extension.ToLower(); //in case url rewriting did something smart
@@ -412,11 +417,15 @@ namespace Talifun.Web.StaticFile
                         entityDataStream = null;
                     }
                 }
+
             }
-            finally
+            catch (HttpException httpException)
             {
-                //We want our custom headers to be outputted and not overwritten
-                response.Flush();
+                //Client disconnected half way through us sending data
+                if (httpException.ErrorCode != ERROR_THE_REMOTE_HOST_CLOSED_THE_CONNECTION)
+                    return;
+
+                throw;
             }
         }
 
@@ -1369,38 +1378,6 @@ namespace Talifun.Web.StaticFile
         }
 
         /// <summary>
-        /// Calculate the content length of a partial response
-        /// </summary>
-        /// <param name="ranges">The ranges that must be sent to the browser</param>
-        /// <param name="contentType">The mime type of the entity</param>
-        /// <param name="contentLength">The length of the entity</param>
-        /// <returns></returns>
-        private static long GetMultipartPartialRequestLength(IEnumerable<RangeItem> ranges, string contentType, long contentLength)
-        {
-            var partialContentLength = 0L;
-            foreach (var range in ranges)
-            {
-                partialContentLength += range.EndRange - range.StartRange + 1;
-
-                partialContentLength += MULTIPART_BOUNDARY.Length;
-                partialContentLength += contentType.Length;
-                partialContentLength += range.StartRange.ToString().Length;
-                partialContentLength += range.EndRange.ToString().Length;
-                partialContentLength += contentLength.ToString().Length;
-
-                //49 is the length of line break and other needed characters in one multipart header
-                partialContentLength += 49;
-            }
-
-            partialContentLength += MULTIPART_BOUNDARY.Length;
-
-            //8 is the length of dash and line break characters
-            partialContentLength += 8;
-
-            return partialContentLength;
-        }
-
-        /// <summary>
         /// Transmit stream to browser
         /// </summary>
         /// <param name="response">The <see cref="HttpResponse" /> of the current HTTP request.</param>
@@ -1417,6 +1394,7 @@ namespace Talifun.Web.StaticFile
             {
                 if (!response.IsClientConnected) break;
                 response.OutputStream.Write(buffer, 0, readCount);
+                Thread.Sleep(100);
             }
         }
 
@@ -1451,6 +1429,60 @@ namespace Talifun.Web.StaticFile
         }
 
         /// <summary>
+        /// Generate a multiple part header for multipart byte range request
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="contentLength"></param>
+        /// <param name="startRange"></param>
+        /// <param name="endRange"></param>
+        /// <returns></returns>
+        private static string GenerateMultiPartHeader(string contentType, long contentLength, long startRange, long endRange)
+        {
+            var multiPartHeader = new StringBuilder();
+
+            multiPartHeader.AppendLine();
+            multiPartHeader.AppendLine("--" + MULTIPART_BOUNDARY);
+            multiPartHeader.AppendLine(HTTP_HEADER_CONTENT_TYPE + ": " + contentType);
+            multiPartHeader.AppendLine(HTTP_HEADER_CONTENT_RANGE + ": bytes " +
+                                      startRange + "-" +
+                                      endRange + "/" +
+                                      contentLength);
+            multiPartHeader.AppendLine();
+
+            return multiPartHeader.ToString();
+        }
+
+        private static string GenerateMultiPartFooter()
+        {
+            var multiPartFooter = new StringBuilder();
+            multiPartFooter.AppendLine();
+            multiPartFooter.AppendLine("--" + MULTIPART_BOUNDARY+"--");
+            return multiPartFooter.ToString();
+        }
+
+        /// <summary>
+        /// Calculate the content length of a partial response
+        /// </summary>
+        /// <param name="ranges">The ranges that must be sent to the browser</param>
+        /// <param name="contentType">The mime type of the entity</param>
+        /// <param name="contentLength">The length of the entity</param>
+        /// <returns></returns>
+        private static long GetMultipartPartialRequestLength(IEnumerable<RangeItem> ranges, string contentType, long contentLength)
+        {
+            var partialContentLength = 0L;
+
+            foreach (var range in ranges)
+            {
+                var multiPartHeader = GenerateMultiPartHeader(contentType, contentLength, range.StartRange, range.EndRange);
+                partialContentLength += multiPartHeader.Length;
+                partialContentLength += range.EndRange - range.StartRange + 1;
+            }
+            var multiPartFooter = GenerateMultiPartFooter();
+            partialContentLength += multiPartFooter.Length;
+            return partialContentLength;
+        }
+
+        /// <summary>
         /// Transmit stream ranges to browser
         /// </summary>
         /// <param name="response">The <see cref="HttpResponse" /> of the current HTTP request.</param>
@@ -1465,22 +1497,16 @@ namespace Talifun.Web.StaticFile
             {
                 if (!response.IsClientConnected) return;
 
-                TransmitMultiPartHeader(response, contentType, contentLength, range.StartRange, range.EndRange);
+                var multiPartHeader = GenerateMultiPartHeader(contentType, contentLength, range.StartRange, range.EndRange);
+                response.Output.Write(multiPartHeader);
                 TransmitFile(response, stream, bufferSize, contentType, contentLength, range.StartRange, range.EndRange);
-                response.Output.WriteLine();
             }
+            if (!response.IsClientConnected) return;
+            var multiPartFooter = GenerateMultiPartFooter();
+            response.Output.Write(multiPartFooter);
         }
 
-        private static void TransmitMultiPartHeader(HttpResponse response, string contentType, long contentLength, long startRange, long endRange)
-        {
-            response.Output.WriteLine("--" + MULTIPART_BOUNDARY);
-            response.Output.WriteLine(HTTP_HEADER_CONTENT_TYPE + ": " + contentType);
-            response.Output.WriteLine(HTTP_HEADER_CONTENT_RANGE + ": bytes " +
-                                      startRange + "-" +
-                                      endRange + "/" +
-                                      contentLength);
-            response.Output.WriteLine();
-        }
+
         #endregion
 
         #region Utils
