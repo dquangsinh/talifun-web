@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Net;
 using System.Reflection;
 using System.Security.Permissions;
-using System.Threading;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
@@ -1394,7 +1393,6 @@ namespace Talifun.Web.StaticFile
             {
                 if (!response.IsClientConnected) break;
                 response.OutputStream.Write(buffer, 0, readCount);
-                Thread.Sleep(100);
             }
         }
 
