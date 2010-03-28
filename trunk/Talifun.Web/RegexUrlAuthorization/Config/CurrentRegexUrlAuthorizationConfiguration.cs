@@ -7,12 +7,20 @@ namespace Talifun.Web.RegexUrlAuthorization.Config
     /// </summary>
     public static class CurrentRegexUrlAuthorizationConfiguration
     {
+        private static RegexUrlAuthorizationSection current;
         /// <summary>
         /// Gets the static instance of <see cref="RegexUrlAuthorizationSection" /> representing the current application configuration.
         /// </summary>
         public static RegexUrlAuthorizationSection Current
         {
-            get { return CurrentConfigurationManager.GetSection<RegexUrlAuthorizationSection>(); }
+            get
+            {
+                if (current == null)
+                {
+                    current = CurrentConfigurationManager.GetSection<RegexUrlAuthorizationSection>();
+                }
+                return current;
+            }
         }
     }
 }

@@ -7,12 +7,20 @@ namespace Talifun.Web.Crusher.Config
     /// </summary>
     public static class CurrentCrusherConfiguration
     {
+        private static CrusherSection current;
         /// <summary>
         /// Gets the static instance of <see cref="CrusherSection" /> representing the current application configuration.
         /// </summary>
         public static CrusherSection Current
         {
-            get { return CurrentConfigurationManager.GetSection<CrusherSection>(); }
+            get
+            {
+                if (current == null)
+                {
+                    current = CurrentConfigurationManager.GetSection<CrusherSection>();
+                }
+                return current;
+            }
         }
     }
 }

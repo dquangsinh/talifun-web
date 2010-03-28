@@ -41,7 +41,7 @@ namespace Talifun.Web
             }
 
             //We will never get here
-            throw new Exception("Unable to open file");
+            throw new IOException("Unable to open file");
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Talifun.Web
             }
 
             //We will never get here
-            throw new Exception("Unable to open file");
+            throw new IOException("Unable to open file");
         }
 
         /// <summary>

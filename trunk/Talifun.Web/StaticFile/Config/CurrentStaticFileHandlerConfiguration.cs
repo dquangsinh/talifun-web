@@ -7,12 +7,20 @@ namespace Talifun.Web.StaticFile.Config
     /// </summary>
     public static class CurrentStaticFileHandlerConfiguration
     {
+        private static StaticFileHandlerSection current = null;
         /// <summary>
         /// Gets the static instance of <see cref="StaticFileHandlerSection" /> representing the current application configuration.
         /// </summary>
         public static StaticFileHandlerSection Current
         {
-            get { return CurrentConfigurationManager.GetSection<StaticFileHandlerSection>(); }
+            get
+            {
+                if (current == null)
+                {
+                    current = CurrentConfigurationManager.GetSection<StaticFileHandlerSection>();
+                }
+                return current;
+            }
         }
     }
 }
