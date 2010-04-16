@@ -47,6 +47,8 @@ namespace Talifun.Web.StaticFile
 
         internal static WebServerType WebServerType { get; set; }
 
+        internal static string staticFileHandlerType = typeof(StaticFileHelper).ToString();
+
         static StaticFileHelper()
         {
             WebServerType = CurrentStaticFileHandlerConfiguration.Current.WebServerType;
@@ -135,7 +137,7 @@ namespace Talifun.Web.StaticFile
                     {
                         case "System.Web.Hosting.ISAPIWorkerRequest":
                             //IIS 7 in Classic mode gets lumped in here too
-                            WebServerType = WebServerType.IIS6;
+                            WebServerType = WebServerType.IIS6orIIS7ClassicMode;
                             break;
                         case "Microsoft.VisualStudio.WebHost.Request":
                         case "Cassini.Request":
@@ -212,10 +214,6 @@ namespace Talifun.Web.StaticFile
       
             try
             {
-
-                var physicalFilePath = file.FullName;
-                var fileExtension = file.Extension.ToLower(); //in case url rewriting did something smart
-
                 if (!ValidateHttpMethod(request))
                 {
                     //If we are unable to parse url send 405 Method not allowed
@@ -223,8 +221,8 @@ namespace Talifun.Web.StaticFile
                     return;
                 }
 
-                if (physicalFilePath.EndsWith(".asp", StringComparison.InvariantCultureIgnoreCase) ||
-                    physicalFilePath.EndsWith(".aspx", StringComparison.InvariantCultureIgnoreCase))
+                if (file.FullName.EndsWith(".asp", StringComparison.InvariantCultureIgnoreCase) ||
+                    file.FullName.EndsWith(".aspx", StringComparison.InvariantCultureIgnoreCase))
                 {
                     //If we are unable to parse url send 403 Path Forbidden
                     SendForbidden(response);
@@ -234,7 +232,7 @@ namespace Talifun.Web.StaticFile
                 var compressionType = GetCompressionMode(request);
 
                 FileExtensionMatch fileExtensionMatch = null;
-                if (!fileExtensionMatches.TryGetValue(fileExtension, out fileExtensionMatch))
+                if (!fileExtensionMatches.TryGetValue(file.Extension.ToLower(), out fileExtensionMatch))
                 {
                     fileExtensionMatch = fileExtensionMatchDefault;
                 }
@@ -251,17 +249,9 @@ namespace Talifun.Web.StaticFile
                     entityStoredWithCompressionType = ResponseCompressionType.None;
                 }
 
-                // If the response bytes are already cached, then deliver the bytes directly from cache
-                var cacheKey = typeof (StaticFileHelper) + ":" + entityStoredWithCompressionType + ":" +
-                               physicalFilePath;
-
                 FileHandlerCacheItem fileHandlerCacheItem = null;
-                var cachedValue = HttpRuntime.Cache.Get(cacheKey);
-                if (cachedValue != null)
-                {
-                    fileHandlerCacheItem = (FileHandlerCacheItem) cachedValue;
-                }
-                else
+
+                if (!TryGetFileHandlerCacheItem(fileExtensionMatch, file, entityStoredWithCompressionType, out fileHandlerCacheItem))
                 {
                     //File does not exist
                     if (!file.Exists)
@@ -276,69 +266,6 @@ namespace Talifun.Web.StaticFile
                         SendRequestedEntityIsTooLargeResponseHeaders(response);
                         return;
                     }
-
-                    var etag = string.Empty;
-                    var lastModifiedFileTime = file.LastWriteTime.ToUniversalTime();
-                    //When a browser sets the If-Modified-Since field to 13-1-2010 10:30:58, another DateTime instance is created, but this one has a Ticks value of 633989754580000000
-                    //But the time from the file system is accurate to a tick. So it might be 633989754586086250.
-                    var lastModified = new DateTime(lastModifiedFileTime.Year, lastModifiedFileTime.Month,
-                                                    lastModifiedFileTime.Day, lastModifiedFileTime.Hour,
-                                                    lastModifiedFileTime.Minute, lastModifiedFileTime.Second);
-                    var contentType = MimeHelper.GetMimeType(file.Extension);
-                    var contentLength = file.Length;
-
-                    //ETAG is always calculated from uncompressed entity data
-                    switch (fileExtensionMatch.EtagMethod)
-                    {
-                        case EtagMethodType.MD5:
-                            etag = HashHelper.CalculateMd5Etag(file);
-                            break;
-                        case EtagMethodType.LastModified:
-                            etag = lastModified.ToString();
-                            break;
-                        default:
-                            throw new Exception("Unknown etag method generation");
-                    }
-
-                    fileHandlerCacheItem = new FileHandlerCacheItem
-                                               {
-                                                   EntityEtag = etag,
-                                                   EntityLastModified = lastModified,
-                                                   ContentLength = contentLength,
-                                                   EntityContentType = contentType
-                                               };
-
-                    if (fileExtensionMatch.ServeFromMemory
-                        && (contentLength <= fileExtensionMatch.MaxMemorySize))
-                    {
-                        // When not compressed, buffer is the size of the file but when compressed, 
-                        // initial buffer size is one third of the file size. Assuming, compression 
-                        // will give us less than 1/3rd of the size
-                        using (var memoryStream = new MemoryStream(
-                            entityStoredWithCompressionType == ResponseCompressionType.None
-                                ?
-                                    Convert.ToInt32(file.Length)
-                                :
-                                    Convert.ToInt32((double) file.Length/3)))
-                        {
-                            ReadEntityData(entityStoredWithCompressionType, file, memoryStream);
-                            var entityData = memoryStream.ToArray();
-                            var entityDataLength = entityData.LongLength;
-
-                            fileHandlerCacheItem.EntityData = entityData;
-                            fileHandlerCacheItem.ContentLength = entityDataLength;
-                        }
-                    }
-
-                    //Put fileHandlerCacheItem into cache with 30 min sliding expiration, also if file changes then remove fileHandlerCacheItem from cache
-                    HttpRuntime.Cache.Insert(
-                        cacheKey,
-                        fileHandlerCacheItem,
-                        new CacheDependency(physicalFilePath),
-                        Cache.NoAbsoluteExpiration,
-                        fileExtensionMatch.MemorySlidingExpiration,
-                        CacheItemPriority.BelowNormal,
-                        null);
                 }
 
                 //Unable to parse request range header
@@ -381,8 +308,8 @@ namespace Talifun.Web.StaticFile
 
                         //We are going to let the output filter do the necessary compression
                         entityStoredWithCompressionType = ResponseCompressionType.None;
-                        entityDataStream = FileHelper.OpenFileStream(file, 5, FileMode.Open, FileAccess.Read,
-                                                                     FileShare.Read);
+                        //entityDataStream = FileHelper.OpenFileStream(file, 5, FileMode.Open, FileAccess.Read,
+                        //                                             FileShare.Read);
                     }
 
                     if (response.StatusCode == (int) HttpStatusCode.PartialContent)
@@ -394,18 +321,37 @@ namespace Talifun.Web.StaticFile
                         }
 
                         //Send a partial response
-                        SendPartialResponse(request, response, compressionType, entityDataStream, BufferSize,
-                                            fileHandlerCacheItem.EntityContentType, fileHandlerCacheItem.ContentLength,
-                                            ranges);
+                        if (entityDataStream == null)
+                        {
+                            //Let IIS send file content with TransmitFile
+                            SendPartialResponse(request, response, compressionType, file, fileHandlerCacheItem.EntityContentType, fileHandlerCacheItem.ContentLength,
+                                                ranges);
+                        }
+                        else
+                        {
+                            //We will serve the in memory file
+                            SendPartialResponse(request, response, compressionType, entityDataStream, BufferSize,
+                                                fileHandlerCacheItem.EntityContentType, fileHandlerCacheItem.ContentLength,
+                                                ranges);
+                        }
                     }
                     else
                     {
                         //Data is already compressed to the correct format
-
                         //Send a full response
-                        SendFullResponse(request, response, compressionType, entityDataStream, BufferSize,
-                                         entityStoredWithCompressionType, fileHandlerCacheItem.EntityContentType,
-                                         fileHandlerCacheItem.ContentLength);
+                        if (entityDataStream == null)
+                        {
+                            //Let IIS send file content with TransmitFile
+                            SendFullResponse(request, response, compressionType, file, fileHandlerCacheItem.EntityContentType, fileHandlerCacheItem.ContentLength);
+                        }
+                        else
+                        {
+                            //We will serve the in memory file
+                            SendFullResponse(request, response, compressionType, entityDataStream, BufferSize,
+                                             entityStoredWithCompressionType, fileHandlerCacheItem.EntityContentType,
+                                             fileHandlerCacheItem.ContentLength);
+                            
+                        }
                     }
                 }
                 finally
@@ -428,6 +374,116 @@ namespace Talifun.Web.StaticFile
             }
         }
 
+        
+
+        /// <summary>
+        /// Get a fileHanderCacheItem for the requested file.
+        /// </summary>
+        /// <param name="fileExtensionMatch">The configuration to use for this extension.</param>
+        /// <param name="file">The file to serve.</param>
+        /// <param name="entityStoredWithCompressionType">The compression type to use for the file.</param>
+        /// <param name="fileHandlerCacheItem">The fileHandlerCacheItem </param>
+        /// <returns>Returns true if a fileHandlerCacheItem can be created; otherwise false.</returns>
+        internal static bool TryGetFileHandlerCacheItem(FileExtensionMatch fileExtensionMatch, FileInfo file, ResponseCompressionType entityStoredWithCompressionType, out FileHandlerCacheItem fileHandlerCacheItem)
+        {
+            fileHandlerCacheItem = null;
+
+            // If the response bytes are already cached, then deliver the bytes directly from cache
+            var cacheKey = staticFileHandlerType + ":" + entityStoredWithCompressionType + ":" + file.FullName;
+
+            var cachedValue = HttpRuntime.Cache.Get(cacheKey);
+            if (cachedValue != null)
+            {
+                fileHandlerCacheItem = (FileHandlerCacheItem)cachedValue;
+            }
+            else
+            {
+                //File does not exist
+                if (!file.Exists)
+                {
+                    return false;
+                }
+
+                //File too large to send
+                if (file.Length > MAX_FILE_SIZE_TO_SERVE)
+                {
+                    return false;
+                }
+
+                var etag = string.Empty;
+                var lastModifiedFileTime = file.LastWriteTime.ToUniversalTime();
+                //When a browser sets the If-Modified-Since field to 13-1-2010 10:30:58, another DateTime instance is created, but this one has a Ticks value of 633989754580000000
+                //But the time from the file system is accurate to a tick. So it might be 633989754586086250.
+                var lastModified = new DateTime(lastModifiedFileTime.Year, lastModifiedFileTime.Month,
+                                                lastModifiedFileTime.Day, lastModifiedFileTime.Hour,
+                                                lastModifiedFileTime.Minute, lastModifiedFileTime.Second);
+                var contentType = MimeHelper.GetMimeType(file.Extension);
+                var contentLength = file.Length;
+
+                //ETAG is always calculated from uncompressed entity data
+                switch (fileExtensionMatch.EtagMethod)
+                {
+                    case EtagMethodType.MD5:
+                        etag = HashHelper.CalculateMd5Etag(file);
+                        break;
+                    case EtagMethodType.LastModified:
+                        etag = lastModified.ToString();
+                        break;
+                    default:
+                        throw new Exception("Unknown etag method generation");
+                }
+
+                fileHandlerCacheItem = new FileHandlerCacheItem
+                {
+                    EntityEtag = etag,
+                    EntityLastModified = lastModified,
+                    ContentLength = contentLength,
+                    EntityContentType = contentType
+                };
+
+                if (fileExtensionMatch.ServeFromMemory
+                    && (contentLength <= fileExtensionMatch.MaxMemorySize))
+                {
+                    // When not compressed, buffer is the size of the file but when compressed, 
+                    // initial buffer size is one third of the file size. Assuming, compression 
+                    // will give us less than 1/3rd of the size
+                    using (var memoryStream = new MemoryStream(
+                        entityStoredWithCompressionType == ResponseCompressionType.None
+                            ?
+                                Convert.ToInt32(file.Length)
+                            :
+                                Convert.ToInt32((double)file.Length / 3)))
+                    {
+                        ReadEntityData(entityStoredWithCompressionType, file, memoryStream);
+                        var entityData = memoryStream.ToArray();
+                        var entityDataLength = entityData.LongLength;
+
+                        fileHandlerCacheItem.EntityData = entityData;
+                        fileHandlerCacheItem.ContentLength = entityDataLength;
+                    }
+                }
+
+                //Put fileHandlerCacheItem into cache with 30 min sliding expiration, also if file changes then remove fileHandlerCacheItem from cache
+                HttpRuntime.Cache.Insert(
+                    cacheKey,
+                    fileHandlerCacheItem,
+                    new CacheDependency(file.FullName),
+                    Cache.NoAbsoluteExpiration,
+                    fileExtensionMatch.MemorySlidingExpiration,
+                    CacheItemPriority.BelowNormal,
+                    null);
+            }
+
+            return true;
+        }
+
+        #region Responses
+
+        /// <summary>
+        /// Set the compression type used in the response.
+        /// </summary>
+        /// <param name="response">An HTTP response.</param>
+        /// <param name="responseCompressionType">The compression type to use in the response.</param>
         internal static void SetContentEncoding(HttpResponse response, ResponseCompressionType responseCompressionType)
         {
             if (responseCompressionType != ResponseCompressionType.None)
@@ -466,8 +522,6 @@ namespace Talifun.Web.StaticFile
             // Tell the client software that we accept Range request
             AppendHeader(response, HTTP_HEADER_ACCEPT_RANGES, HTTP_HEADER_ACCEPT_RANGES_BYTES);
         }
-
-        #region Responses
 
         /// <summary>
         /// Sends an HTTP 200 "OK" response to the request referenced by the supplied context.
@@ -846,7 +900,7 @@ namespace Talifun.Web.StaticFile
             var rangesString = requestHeaderRange.Replace("bytes=", "").Split(",".ToCharArray());
 
             // Check each found Range request for consistency
-            for (int i = 0; i < rangesString.Length; i++)
+            for (var i = 0; i < rangesString.Length; i++)
             {
                 // Split this range request by the dash character, 
                 // currentRange[0] contains the requested begin-value,
@@ -1112,7 +1166,7 @@ namespace Talifun.Web.StaticFile
             var fileInfo = new FileInfo(filename);
             var contentType = MimeHelper.GetMimeType(fileInfo.Extension);
             var contentLength = fileInfo.Length;
-            SendFullResponse(request, response, compressionType, filename, contentType, contentLength);
+            SendFullResponse(request, response, compressionType, fileInfo, contentType, contentLength);
         }
 
         /// <summary>
@@ -1129,24 +1183,7 @@ namespace Talifun.Web.StaticFile
         {
             var contentType = MimeHelper.GetMimeType(fileInfo.Extension);
             var contentLength = fileInfo.Length;
-            SendFullResponse(request, response, compressionType, fileInfo.FullName, contentType, contentLength);
-        }
-
-        /// <summary>
-        /// Sends a file to the browser. 
-        /// </summary>
-        /// <remarks>
-        /// This is the best way to transmit a file as it uses the native TransmitFile method.
-        /// </remarks>
-        /// <param name="request">An HTTP request.</param>
-        /// <param name="response">An HTTP response.</param>
-        /// <param name="compressionType">The compression type that request wants it sent back in</param>
-        /// <param name="fileInfo">File to send</param>
-        /// <param name="contentType">The mime type of the entity</param>
-        /// <param name="contentLength">The length of the entity</param>
-        public static void SendFullResponse(HttpRequest request, HttpResponse response, ResponseCompressionType compressionType, FileInfo fileInfo, string contentType, long contentLength)
-        {
-            SendFullResponse(request, response, compressionType, fileInfo.FullName, contentType, contentLength);
+            SendFullResponse(request, response, compressionType, fileInfo, contentType, contentLength);
         }
 
         /// <summary>
@@ -1162,6 +1199,24 @@ namespace Talifun.Web.StaticFile
         /// <param name="contentType">The mime type of the entity</param>
         /// <param name="contentLength">The length of the entity</param>
         public static void SendFullResponse(HttpRequest request, HttpResponse response, ResponseCompressionType compressionType, string filename, string contentType, long contentLength)
+        {
+            var fileInfo = new FileInfo(filename);
+            SendFullResponse(request, response, compressionType, fileInfo, contentType, contentLength);
+        }
+
+        /// <summary>
+        /// Sends a file to the browser. 
+        /// </summary>
+        /// <remarks>
+        /// This is the best way to transmit a file as it uses the native TransmitFile method.
+        /// </remarks>
+        /// <param name="request">An HTTP request.</param>
+        /// <param name="response">An HTTP response.</param>
+        /// <param name="compressionType">The compression type that request wants it sent back in</param>
+        /// <param name="fileInfo">File to send</param>
+        /// <param name="contentType">The mime type of the entity</param>
+        /// <param name="contentLength">The length of the entity</param>
+        public static void SendFullResponse(HttpRequest request, HttpResponse response, ResponseCompressionType compressionType, FileInfo fileInfo, string contentType, long contentLength)
         {
             //How should data be compressed
             if (compressionType == ResponseCompressionType.None)
@@ -1187,7 +1242,7 @@ namespace Talifun.Web.StaticFile
                 return;
             }
 
-            response.TransmitFile(filename);
+            response.TransmitFile(fileInfo.FullName);
         }
 
         /// <summary>
@@ -1305,6 +1360,60 @@ namespace Talifun.Web.StaticFile
             {
                 SendPartialResponse(request, response, compressionType, stream, BufferSize, contentType, contentLength, ranges);
             }
+
+            if (compressionType == ResponseCompressionType.None)
+            {
+                if (ranges.Count == 1)
+                {
+                    var startRange = ranges[0].StartRange;
+                    var endRange = ranges[0].EndRange;
+                    AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, (endRange - startRange + 1).ToString());
+                }
+                else
+                {
+                    var partialContentLength = GetMultipartPartialRequestLength(ranges, contentType, contentLength);
+                    AppendHeader(response, HTTP_HEADER_CONTENT_LENGTH, partialContentLength.ToString());
+                }
+            }
+            else if (compressionType == ResponseCompressionType.GZip)
+            {
+                SetContentEncoding(response, compressionType);
+                response.Filter = new GZipStream(response.Filter, CompressionMode.Compress);
+            }
+            else if (compressionType == ResponseCompressionType.Deflate)
+            {
+                SetContentEncoding(response, compressionType);
+                response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
+            }
+
+            if (ranges.Count == 1)
+            {
+                var startRange = ranges[0].StartRange;
+                var endRange = ranges[0].EndRange;
+
+                response.ContentType = contentType;
+                AppendHeader(response, HTTP_HEADER_CONTENT_RANGE, "bytes " + startRange + "-" + endRange + "/" + contentLength);
+
+                if (request.HttpMethod == HTTP_METHOD_HEAD)
+                {
+                    return;
+                }
+
+                var bytesToRead = endRange - startRange + 1;
+
+                response.TransmitFile(fileInfo.FullName, startRange, bytesToRead);
+            }
+            else
+            {
+                response.ContentType = MULTIPART_CONTENTTYPE;
+
+                if (request.HttpMethod == HTTP_METHOD_HEAD)
+                {
+                    return;
+                }
+
+                TransmitMultiPartFile(response, fileInfo, contentType, contentLength, ranges);
+            }
         }
 
         /// <summary>
@@ -1361,7 +1470,7 @@ namespace Talifun.Web.StaticFile
                     return;
                 }
 
-                TransmitFile(response, stream, bufferSize, contentType, contentLength, startRange, endRange);
+                TransmitFile(response, stream, bufferSize, startRange, endRange);
             }
             else
             {
@@ -1384,14 +1493,11 @@ namespace Talifun.Web.StaticFile
         /// <param name="bufferSize">The buffer size to use when transmitting file to browser.</param>
         private static void TransmitFile(HttpResponse response, Stream stream, int bufferSize)
         {
-            //TODO : Do we need to seek origin
-            //stream.Seek(0, SeekOrigin.Begin);
-
             var buffer = new byte[bufferSize];
             var readCount = 0;
             while ((readCount = stream.Read(buffer, 0, bufferSize)) > 0)
             {
-                if (!response.IsClientConnected) break;
+                //if (!response.IsClientConnected) break;
                 response.OutputStream.Write(buffer, 0, readCount);
             }
         }
@@ -1406,15 +1512,13 @@ namespace Talifun.Web.StaticFile
         /// <param name="contentLength">The length of the entity.</param>
         /// <param name="startRange">Start range</param>
         /// <param name="endRange">End range</param>
-        private static void TransmitFile(HttpResponse response, Stream stream, long bufferSize, string contentType, long contentLength, long startRange, long endRange)
+        private static void TransmitFile(HttpResponse response, Stream stream, long bufferSize, long startRange, long endRange)
         {
-            stream.Seek(startRange, SeekOrigin.Begin);
-
             var bytesToRead = endRange - startRange + 1;
             var buffer = new byte[bufferSize];
             while (bytesToRead > 0)
             {
-                if (!response.IsClientConnected) return;
+                //if (!response.IsClientConnected) return;
 
                 var lengthOfReadChunk = stream.Read(buffer, 0, (int)Math.Min(bufferSize, bytesToRead));
 
@@ -1493,17 +1597,37 @@ namespace Talifun.Web.StaticFile
         {
             foreach (var range in ranges)
             {
-                if (!response.IsClientConnected) return;
+                //if (!response.IsClientConnected) return;
 
                 var multiPartHeader = GenerateMultiPartHeader(contentType, contentLength, range.StartRange, range.EndRange);
                 response.Output.Write(multiPartHeader);
-                TransmitFile(response, stream, bufferSize, contentType, contentLength, range.StartRange, range.EndRange);
+                TransmitFile(response, stream, bufferSize, range.StartRange, range.EndRange);
             }
-            if (!response.IsClientConnected) return;
+            //if (!response.IsClientConnected) return;
             var multiPartFooter = GenerateMultiPartFooter();
             response.Output.Write(multiPartFooter);
         }
 
+        private static void TransmitMultiPartFile(HttpResponse response, FileInfo fileInfo, string contentType, long contentLength, IEnumerable<RangeItem> ranges)
+        {
+            foreach (var range in ranges)
+            {
+                //if (!response.IsClientConnected) return;
+
+                var multiPartHeader = GenerateMultiPartHeader(contentType, contentLength, range.StartRange, range.EndRange);
+                response.Output.Write(multiPartHeader);
+
+                var bytesToRead = range.EndRange - range.StartRange + 1;
+                response.TransmitFile(fileInfo.FullName, range.StartRange, bytesToRead);
+
+                //TransmitFile is asynchronous
+                //http://stackoverflow.com/questions/2275894/calling-response-transmitfile-from-static-method
+                response.Flush();
+            }
+            //if (!response.IsClientConnected) return;
+            var multiPartFooter = GenerateMultiPartFooter();
+            response.Output.Write(multiPartFooter);
+        }
 
         #endregion
 

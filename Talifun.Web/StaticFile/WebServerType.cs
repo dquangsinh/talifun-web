@@ -5,7 +5,7 @@
         NotSet,
         Unknown,
         IIS7,
-        IIS6,
+        IIS6orIIS7ClassicMode,
         Cassini
     }
 }
