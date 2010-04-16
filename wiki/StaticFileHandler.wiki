@@ -10,8 +10,17 @@ It generates consistent etags and the correct meta tags for caching on proxies a
 It can also serve cached requests and compressed cached requests from memory bypassing the hard drive. 
 
 = When to use it =
-
 When you want to serve static files. For example jpg, gif, xls, pdf, mp3, avi.
+
+Rather use IIS Kernel Mode caching when:
+  * IIS version is 7 or higher
+  * You only need to varyByHeaders attribute and not by varyByQuerystring
+  * You do not need to support any modules or features that must be run in user mode, e.g. authentication or authorization.
+  * Have control over IIS configuration
+
+[http://learn.iis.net/page.aspx/154/walkthrough-iis-70-output-caching/]
+
+Kernel Mode caching is the quickest way to serve content.
 
 = Features =
 
