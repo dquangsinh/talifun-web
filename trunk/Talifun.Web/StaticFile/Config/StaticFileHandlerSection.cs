@@ -26,6 +26,9 @@ namespace Talifun.Web.StaticFile.Config
         /// <summary>
         /// Gets or sets the web server type used to serve requests.
         /// </summary>
+        /// <remarks>
+        /// Set this value if you need to run in medium trust, as it needs to use reflection to work out the web server type.
+        /// </remarks>
         [ConfigurationProperty("webServerType", DefaultValue = WebServerType.NotSet, IsRequired = false)]
         public WebServerType WebServerType
         {
