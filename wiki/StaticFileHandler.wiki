@@ -74,6 +74,13 @@ Compression of *multipart/byteranges* is supported too.
 
 = Configuration =
 
+*WebServerType*
+  * *NotSet* - Auto detect web server type (*default*)
+  * *Unknown* - Unable to detect web server type
+  * *IIS7* - IIS 7
+  * *IIS6orIIS7ClassicMode* - IIS 6 or IIS 7 in classic mode
+  * *Cassini* - Cassini
+
 *EtagMethodType*
   * *MD5* - The etag must be a MD5 hash of the file's contents
   * *LastModified* - The etag must be the date time the file was last accessed
