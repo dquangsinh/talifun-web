@@ -80,6 +80,7 @@ Compression of *multipart/byteranges* is supported too.
   * *IIS7* - IIS 7
   * *IIS6orIIS7ClassicMode* - IIS 6 or IIS 7 in classic mode
   * *Cassini* - Cassini
+_If you need to run this this handler in medium trust you will need to set this value, as it uses reflection to work out the type of web server used._
 
 *EtagMethodType*
   * *MD5* - The etag must be a MD5 hash of the file's contents
@@ -111,7 +112,7 @@ Example Configuration:
 	<configSections>
 		<section name="StaticFileHandler" type="Talifun.Web.StaticFile.Config.StaticFileHandlerSection, Talifun.Web" requirePermission="false" allowDefinition="MachineToApplication"/>
 	</configSections>
-	<StaticFileHandler>
+	<StaticFileHandler webServerType="NotSet">
 		<!-- The defaults to use when an extension is found that does not have a specific rule  -->
 		<fileExtensionDefault name="Default" serveFromMemory="true" maxMemorySize="100000" compress="true"/>
 		<!-- Specific rules for extension types -->
