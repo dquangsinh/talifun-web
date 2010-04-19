@@ -11,6 +11,10 @@ It also watches for changes to any of the watched css or js files and regenerate
 
 When you want to minimize the number of http requests and the size of js and css files.
 
+Serving requests with an http handler that dynamically creates a crushed js or css file per a page is not a good idea. It is better to crush your entire sites js and css files into one file and rather serve that. This way the browser loads it once and its cached. All further requests just load from cache. Dynamically crushed js and css files create a file per page. So you might be re-serving the same css and js files for every page.
+
+You can then let the web server serve the crushed css/js file. IIS implements kernel mode caching, which is the fastest way to serve any static file.
+
 = Features =
   * Can crush and compress multiple css files into one file
   * Can crush and compress multiple js files into one file
