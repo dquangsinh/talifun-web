@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,6 +12,25 @@
     <AssemblyName>Talifun.Web</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,14 +56,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\EnvDTE90.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\References\RhinoMocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Xml" />
     <Reference Include="Yahoo.Yui.Compressor, Version=1.4.1.0, Culture=neutral, PublicKeyToken=f8b4b81ec75097e2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -67,10 +91,33 @@
     <Compile Include="CssSprite\CssSpriteModule.cs" />
     <Compile Include="CssSprite\ImageFile.cs" />
     <Compile Include="CssSprite\SpriteElement.cs" />
-    <Compile Include="Helper\FileHelper.cs" />
-    <Compile Include="Helper\HashHelper.cs" />
-    <Compile Include="Helper\MimeHelper.cs" />
+    <Compile Include="Helper\RetryableFileOpener.cs" />
+    <Compile Include="Helper\Hasher.cs" />
+    <Compile Include="Helper\IRetryableFileOpener.cs" />
+    <Compile Include="Helper\IHasher.cs" />
+    <Compile Include="Helper\IMimeTyper.cs" />
+    <Compile Include="Helper\MimeTyper.cs" />
     <Compile Include="Helper\UrlHelper.cs" />
+    <Compile Include="Http\HeaderValueQValueComparer.cs" />
+    <Compile Include="Http\HttpHeaderValue.cs" />
+    <Compile Include="Http\HttpMethod.cs" />
+    <Compile Include="Http\HttpProtocolVersion.cs" />
+    <Compile Include="Http\HttpResponseHeaderHelper.cs" />
+    <Compile Include="Http\HttpStatus.cs" />
+    <Compile Include="Http\IHttpRequestHeaderHelper.cs" />
+    <Compile Include="Http\IHttpResponseHeaderHelper.cs" />
+    <Compile Include="Http\temp\IByteRangeResponse.cs" />
+    <Compile Include="Http\temp\IEntity.cs" />
+    <Compile Include="Http\temp\IEntityResponse.cs" />
+    <Compile Include="Http\temp\MultipleByteRangeResponse.cs" />
+    <Compile Include="Http\temp\FullEntityResponse.cs" />
+    <Compile Include="Http\temp\ITransmitEntityStrategy.cs" />
+    <Compile Include="Http\temp\PartialEntityResponse.cs" />
+    <Compile Include="Http\temp\SingleByteRangeResponse.cs" />
+    <Compile Include="Http\temp\TransmitEntityStrategyForByteArray.cs" />
+    <Compile Include="Http\temp\TransmitEntityStrategyForFile.cs" />
+    <Compile Include="Http\temp\TransmitEntityStrategyForIIS.cs" />
+    <Compile Include="Http\temp\TransmitEntityStrategyForStream.cs" />
     <Compile Include="LogUrl\AfterLogUrlEventArgs.cs" />
     <Compile Include="LogUrl\AfterLogUrlEventHandler.cs" />
     <Compile Include="LogUrl\BeforeLogUrlEventArgs.cs" />
@@ -125,15 +172,34 @@
     <Compile Include="StaticFile\FileExtensionMatch.cs" />
     <Compile Include="StaticFile\FileHandlerCacheItem.cs" />
     <Compile Include="Compress\PageCompressionModule.cs" />
+    <Compile Include="Http\HttpRequestHeaderHelper.cs" />
     <Compile Include="StaticFile\StaticFileHelper.cs" />
     <Compile Include="StaticFile\StaticFileHandler.cs" />
-    <Compile Include="StaticFile\RangeItem.cs" />
-    <Compile Include="StaticFile\ResponseCompressionType.cs" />
+    <Compile Include="Http\RangeItem.cs" />
+    <Compile Include="Http\ResponseCompressionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticFile\WebServerType.cs" />
+    <Compile Include="Http\StringifyHttpHeaders.cs" />
+    <Compile Include="Http\WebServerType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Crusher\Config\Crusher.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

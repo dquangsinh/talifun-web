@@ -16,6 +16,15 @@ namespace Talifun.Web.Crusher
     {
         protected CssGroupElementCollection cssGroups = CurrentCrusherConfiguration.Current.CssGroups;
 
+        protected IRetryableFileOpener RetryableFileOpener { get; set; }
+        protected IHasher Hasher { get; set; }
+
+        public CssControl()
+        {
+            RetryableFileOpener = new RetryableFileOpener();
+            Hasher = new Hasher(RetryableFileOpener);
+        }
+
         /// <summary>
         /// The name of css group to generate the include headers for.
         /// </summary>
@@ -57,7 +66,7 @@ namespace Talifun.Web.Crusher
                 if (!cssGroup.Debug)
                 {
                     var fileInfo = new FileInfo(HttpContext.Current.Server.MapPath(outputFilePath));
-                    var etag = HashHelper.CalculateMd5Etag(fileInfo);
+                    var etag = Hasher.CalculateMd5Etag(fileInfo);
                     var url = string.IsNullOrEmpty(cssGroup.Url) ? this.ResolveUrl(outputFilePath) : cssGroup.Url;
 
                     scriptLinks = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + url + "?Etag=" + etag + "\" media=\"" + cssGroup.Media + "\" />"; 
@@ -68,7 +77,7 @@ namespace Talifun.Web.Crusher
                     foreach (CssFileElement file in cssGroup.Files)
                     {
                         var fileInfo = new FileInfo(HttpContext.Current.Server.MapPath(file.FilePath));
-                        var etag = HashHelper.CalculateMd5Etag(fileInfo);
+                        var etag = Hasher.CalculateMd5Etag(fileInfo);
                         var url = this.ResolveUrl(file.FilePath);
 
                         scriptLinksBuilder.Append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + url + "?Etag=" + etag + "\" media=\"" + cssGroup.Media + "\" />"); 

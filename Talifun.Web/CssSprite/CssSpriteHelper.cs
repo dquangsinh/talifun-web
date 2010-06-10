@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
@@ -17,6 +18,9 @@ namespace Talifun.Web.CssSprite
     {
         private const int BufferSize = 32768;
         private const int ImagePadding = 2;
+
+        private static IRetryableFileOpener _retryableFileOpener = new RetryableFileOpener();
+        private static IHasher _hasher = new Hasher(_retryableFileOpener);
 
         /// <summary>
         /// Add images to be generated into sprite image.
@@ -44,7 +48,7 @@ namespace Talifun.Web.CssSprite
             foreach (var file in files)
             {
                 var fileInfo = new FileInfo(HostingEnvironment.MapPath(file.FilePath));
-                using (var reader = FileHelper.OpenFileStream(fileInfo, 5, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var reader = _retryableFileOpener.OpenFileStream(fileInfo, 5, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     var spriteElement = new SpriteElement(file.Name, reader);
                     spriteElements.Add(spriteElement);
@@ -59,16 +63,16 @@ namespace Talifun.Web.CssSprite
                     image.Save(writer, ImageFormat.Png);
                     writer.Flush();
 
-                    etag = HashHelper.CalculateMd5Etag(writer);
+                    etag = _hasher.CalculateMd5Etag(writer);
 
                     var imageFileInfo = new FileInfo(HostingEnvironment.MapPath(imageOutputPath));
                     //We might be competing with the web server for the output file, so try to overwrite it at regular intervals
-                    using (var outputFile = FileHelper.OpenFileStream(imageFileInfo, 5, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+                    using (var outputFile = _retryableFileOpener.OpenFileStream(imageFileInfo, 5, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                     {
                         var overwrite = true;
                         if (outputFile.Length > 0)
                         {
-                            var outputFileHash = HashHelper.CalculateMd5Etag(outputFile);
+                            var outputFileHash = _hasher.CalculateMd5Etag(outputFile);
                             overwrite = (etag != outputFileHash);
                         }
 
@@ -104,13 +108,13 @@ namespace Talifun.Web.CssSprite
                 }
 
                 var cssFileInfo = new FileInfo(HostingEnvironment.MapPath(cssOutputPath));
-                using (var outputFile = FileHelper.OpenFileStream(cssFileInfo, 5, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+                using (var outputFile = _retryableFileOpener.OpenFileStream(cssFileInfo, 5, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
                     var overwrite = true;
                     if (outputFile.Length > 0)
                     {
-                        var newOutputFileHash = HashHelper.CalculateMd5Etag(writer);
-                        var outputFileHash = HashHelper.CalculateMd5Etag(outputFile);
+                        var newOutputFileHash = _hasher.CalculateMd5Etag(writer);
+                        var outputFileHash = _hasher.CalculateMd5Etag(outputFile);
 
                         overwrite = (newOutputFileHash != outputFileHash);
                     }
@@ -303,10 +307,7 @@ namespace Talifun.Web.CssSprite
         /// <returns>The height if all the sprites added together.</returns>
         private static int TotalHeight(IEnumerable<SpriteElement> spriteElements)
         {
-            var total = 0;
-            foreach (var s in spriteElements)
-                total += s.Height + ImagePadding;
-            return total;
+            return spriteElements.Sum(x => x.Height + ImagePadding);
         }
 
         /// <summary>
@@ -316,13 +317,7 @@ namespace Talifun.Web.CssSprite
         /// <returns>The width of the widest sprite.</returns>
         private static int MaxWidth(IEnumerable<SpriteElement> spriteElements)
         {
-            var largest = 0;
-
-            foreach (var s in spriteElements)
-                if (s.Width > largest)
-                    largest = s.Width;
-
-            return largest;
+            return spriteElements.Max(x => x.Width);
         }
     }
 }

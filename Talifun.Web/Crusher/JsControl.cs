@@ -14,6 +14,15 @@ namespace Talifun.Web.Crusher
     /// </summary>
     public class JsControl : WebControl
     {
+        protected IRetryableFileOpener RetryableFileOpener { get; set; }
+        protected IHasher Hasher { get; set; }
+
+        public JsControl()
+        {
+            RetryableFileOpener = new RetryableFileOpener();
+            Hasher = new Hasher(RetryableFileOpener);
+        }
+
         protected JsGroupElementCollection jsGroups = CurrentCrusherConfiguration.Current.JsGroups;
 
         /// <summary>
@@ -57,7 +66,7 @@ namespace Talifun.Web.Crusher
                 if (!jsGroup.Debug)
                 {
                     var fileInfo = new FileInfo(HttpContext.Current.Server.MapPath(outputFilePath));
-                    var etag = HashHelper.CalculateMd5Etag(fileInfo);
+                    var etag = Hasher.CalculateMd5Etag(fileInfo);
                     var url = string.IsNullOrEmpty(jsGroup.Url) ? this.ResolveUrl(outputFilePath) : jsGroup.Url;
 
                     scriptLinks = "<script language=\"javascript\" type=\"text/javascript\" src=\"" + url + "?Etag=" + etag + "\"></script>";
@@ -68,7 +77,7 @@ namespace Talifun.Web.Crusher
                     foreach (JsFileElement file in jsGroup.Files)
                     {
                         var fileInfo = new FileInfo(HttpContext.Current.Server.MapPath(file.FilePath));
-                        var etag = HashHelper.CalculateMd5Etag(fileInfo);
+                        var etag = Hasher.CalculateMd5Etag(fileInfo);
                         var url = this.ResolveUrl(file.FilePath);
 
                         scriptLinksBuilder.Append("<script language=\"javascript\" type=\"text/javascript\" src=\"" + url + "?Etag=" + etag + "\"></script>");

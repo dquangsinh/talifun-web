@@ -14,9 +14,14 @@ namespace Talifun.Web.StaticFile
             get { return true; }
         }
 
-        public void ProcessRequest(HttpContext context)
+        public void ProcessRequest(HttpContext httpContext)
         {
-            StaticFileHelper.ProcessRequest(context);
+            if (HttpContext.Current == null)
+            {
+                HttpContext.Current = httpContext;
+            }
+
+            StaticFileHelper.ProcessRequest(new HttpContextWrapper(httpContext));
         }
 
         #endregion
