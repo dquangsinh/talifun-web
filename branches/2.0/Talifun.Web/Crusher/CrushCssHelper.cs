@@ -15,6 +15,8 @@ namespace Talifun.Web.Crusher
     public static class CrushCssHelper
     {
         private const int BufferSize = 32768;
+        private static IRetryableFileOpener _retryableFileOpener = new RetryableFileOpener();
+        private static IHasher _hasher = new Hasher(_retryableFileOpener);
 
         /// <summary>
         /// Add css files to be crushed.
@@ -42,7 +44,7 @@ namespace Talifun.Web.Crusher
             foreach (var file in files)
             {
                 var fileInfo = new FileInfo(HostingEnvironment.MapPath(file.FilePath));
-                var fileContents = FileHelper.ReadAllText(fileInfo);
+                var fileContents = _retryableFileOpener.ReadAllText(fileInfo);
 
                 switch (file.CompressionType)
                 {
@@ -105,13 +107,13 @@ namespace Talifun.Web.Crusher
                 }
 
                 //We might be competing with the web server for the output file, so try to overwrite it at regular intervals
-                using (var outputFile = FileHelper.OpenFileStream(new FileInfo(HostingEnvironment.MapPath(outputPath)), 5, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+                using (var outputFile = _retryableFileOpener.OpenFileStream(new FileInfo(HostingEnvironment.MapPath(outputPath)), 5, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
                     var overwrite = true;
                     if (outputFile.Length > 0)
                     {
-                        var newOutputFileHash = HashHelper.CalculateMd5Etag(writer);
-                        var outputFileHash = HashHelper.CalculateMd5Etag(outputFile);
+                        var newOutputFileHash = _hasher.CalculateMd5Etag(writer);
+                        var outputFileHash = _hasher.CalculateMd5Etag(outputFile);
 
                         overwrite = (newOutputFileHash != outputFileHash);
                     }
