@@ -25,6 +25,8 @@ You can then let the web server serve the crushed css/js file. IIS implements ke
   * Debug mode for when you need to work with the css or js
 
 = Configuration =
+*Crusher*
+  * _string_ *QuerystringKeyName* - The name of the query string key that is appended for the hash of the file
 
 *JsCompressionType*
   * *None* - Do not use any compression at all on js file
@@ -62,7 +64,7 @@ Example Configuration:
 	<configSections>
 		<section name="Crusher" type="Talifun.Web.Crusher.Config.CrusherSection, Talifun.Web" requirePermission="false" allowDefinition="MachineToApplication"/>
 	</configSections>
-	<Crusher>
+	<Crusher querystringKeyName="etag">
 		<!-- outputFilePath is the identifier for the cssGroup, so make sure its unique for each cssGroup  -->
 		<cssGroups>
 			<!-- Css group to demo the crushing -->
