@@ -24,6 +24,12 @@ You can then let the web server serve the crushed css/js file. IIS implements ke
   * Supports multiple grouping of js or css
   * Debug mode for when you need to work with the css or js
 
+= File permissions =
+
+In order to create the crushed files the application pool user for the website that is using the module will needs "modify" rights. Generally the user used for application pool is "NetworkService".
+
+See [http://msdn.microsoft.com/en-us/magazine/cc982153.aspx] for details on how to change file permissions.
+
 = Configuration =
 *Crusher*
   * _string_ *QuerystringKeyName* - The name of the query string key that is appended for the hash of the file
