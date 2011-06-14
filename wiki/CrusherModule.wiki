@@ -30,6 +30,18 @@ In order to create the crushed files the application pool user for the website t
 
 See [http://msdn.microsoft.com/en-us/magazine/cc982153.aspx] for details on how to change file permissions.
 
+= CDN or cookieless domain usage =
+
+To make use of CDN you will need to copy up the crushed files to the CDN.
+
+Then for cookieless domain or CDN specify usage, specify the full url to use in the *url* configuration setting.
+
+e.g.
+
+<cssGroup name="SiteCss" debug="false" appendHash="true" outputFilePath="~/Static/Css/site.css" *url="http://www.test.com/Css/site.css"*>
+
+<jsGroup name="SiteJs" debug="false" outputFilePath="~/Static/Js/site.js" *url="http://www.test.com/Js/site.js"*>
+
 = Configuration =
 *Crusher*
   * _string_ *QuerystringKeyName* - The name of the query string key that is appended for the hash of the file
