@@ -34,13 +34,15 @@ See [http://msdn.microsoft.com/en-us/magazine/cc982153.aspx] for details on how 
 
 To make use of CDN you will need to copy up the crushed files to the CDN.
 
-Then for cookieless domain or CDN specify usage, specify the full url to use in the *url* configuration setting.
+Then for cookieless domain or CDN specify usage, specify the full url to use in the *url* configuration setting. The etag of the local version of the file will be appending to the full url. This will insure that clients will always received the latest version of content even if it is loading from external servers.
 
 e.g.
 
 <cssGroup name="SiteCss" debug="false" appendHash="true" outputFilePath="~/Static/Css/site.css" *url="http://www.test.com/Css/site.css"*>
 
 <jsGroup name="SiteJs" debug="false" outputFilePath="~/Static/Js/site.js" *url="http://www.test.com/Js/site.js"*>
+
+Remote urls are specifically not allowed as a filePath as there is no way of detecting changes to them. So it is better to copy them locally, and then copy crushed files up as we can be certain of file changes.
 
 = Configuration =
 *Crusher*
