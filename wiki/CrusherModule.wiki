@@ -41,7 +41,7 @@ See [http://msdn.microsoft.com/en-us/magazine/cc982153.aspx] for details on how 
 *JsGroupElement*
   * _string_ *Name* - the unique name of the configuration element
   * _string_ *OutputFilePath* - the file path for the output js file 
-  * _string_ *Url* - the url for output js file
+  * _string_ *Url* - the url for output js file. If Debug=true it will use local resource instead of specified url.
   * _bool_ *Debug* - should the uncrushed versions of the js files be used
 
 *CssCompressionType*
@@ -53,7 +53,7 @@ See [http://msdn.microsoft.com/en-us/magazine/cc982153.aspx] for details on how 
 *CssGroupElement*
   * _string_ *Name* - the unique name of the configuration element
   * _string_ *OutputFilePath* - the file path for the output css file
-  * _string_ *Url* - the url for output css file. If Debug=true it will use local resource instead of specified url.
+  * _string_ *Url* - the url for output css file. If Debug=true it will use local resource instead of specified url
   * _string_ *Media* - the url for output css file
   * _bool_ *Debug* - should the uncrushed versions of the css files be used
   * _bool_ *AppendHash* - Should a hash be appended to url of css assets
