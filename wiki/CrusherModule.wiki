@@ -15,7 +15,7 @@ Serving requests with an http handler that dynamically creates a crushed js or c
 
 You can then let the web server serve the crushed css/js file. IIS implements kernel mode caching, which is the *fastest way* to serve any static file.
 
-For maximum performance it is recommend to *not* enabling the http module and rather precompile the css and js files required by the site by using the command line tool Talifun.Crusher.exe. It can easily be run as part of your build process. This would also negate the need for the http module to have access rights to create and modify the crushed files, which could be an issue in a secure environment. It also enables easy deployment to external CDNs.
+For maximum performance it is recommend to *not* enable the http module and rather precompile the css and js files required by the site by using the command line tool Talifun.Crusher.exe. It can easily be run as part of your build process. This would also negate the need for the http module to have access rights to create and modify the crushed files, which could be an issue in a secure environment. It also enables easy deployment to external CDNs.
 
 = Features =
   * Can crush and compress multiple css files into one file
