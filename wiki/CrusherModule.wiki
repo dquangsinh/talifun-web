@@ -13,7 +13,9 @@ When you want to minimize the number of http requests and the size of js and css
 
 Serving requests with an http handler that dynamically creates a crushed js or css file per a page is not a good idea. It is better to crush your entire sites js and css files into one file and rather serve that. This way the browser loads it once and its cached. All further requests just load from cache. Dynamically crushed js and css files create a file per page. So you might be re-serving the same css and js files for every page.
 
-You can then let the web server serve the crushed css/js file. IIS implements kernel mode caching, which is the fastest way to serve any static file.
+You can then let the web server serve the crushed css/js file. IIS implements kernel mode caching, which is the *fastest way* to serve any static file.
+
+For maximum performance it is recommend to *not* enabling the http module and rather precompile the css and js files required by the site by using the command line tool Talifun.Crusher.exe. It can easily be run as part of your build process. This would also negate the need for the http module to have access rights to create and modify the crushed files, which could be an issue in a secure environment. It also enables easy deployment to external CDNs.
 
 = Features =
   * Can crush and compress multiple css files into one file
@@ -120,7 +122,10 @@ Example Configuration:
 			</controls>
 		</pages>	
 		<httpModules>
+			<!-- Only recommended when doing local development / rather use Talifun.Crusher.exe as part of your build script -->
+			<!--
 			<add name="CrusherModule" type="Talifun.Web.Crusher.CrusherModule, Talifun.Web"/>
+			-->
 		</httpModules>
 	</system.web>		
 </configuration>
